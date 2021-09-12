@@ -1,21 +1,23 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { useStore } from 'vuex'
+import { onMounted, computed } from 'vue'
+import Login from './layouts/Login.vue'
+import Sidebar from './layouts/Sidebar.vue'
+
+const store = useStore()
+const isLogged = computed(() => store.state.user)
+
+const projectType = computed(() => store.state.project && store.state.project.type)
+
+onMounted(() => {
+    store.dispatch('init')
+})
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
-</template>
+<div>
+    <Login v-if="!isLogged" />
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+    <Sidebar v-if="projectType === 'site'" />
+</div>
+</template>
