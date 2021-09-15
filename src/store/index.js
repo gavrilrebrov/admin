@@ -4,10 +4,12 @@ import VueCookies from 'vue-cookies'
 const apiUrl = 'http://localhost:1337'
 
 import pages from './modules/pages'
+import es from './modules/es'
 
 export default createStore({
     modules: {
         pages,
+        es,
     },
 
     state () {

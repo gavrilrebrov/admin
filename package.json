@@ -7,6 +7,8 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "vue": "^3.2.6",
     "vue-cookies": "^1.7.4",
     "vue-router": "^4.0.11",
