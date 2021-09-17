@@ -46,6 +46,16 @@ const onDownload = (e, id) => {
                     >
                         {{ column.label }}
                     </th>
+
+                    <th class="
+                        px-6 py-3 text-left text-xs font-medium
+                            text-gray-500 uppercase
+                            tracking-wider
+                    "
+                        v-if="edit || show"
+                    >
+
+                    </th>
                 </tr>
             </thead>
 
@@ -58,8 +68,7 @@ const onDownload = (e, id) => {
                     <td v-for="col, colIndex in columns"
                         :key="colIndex"
                         class="px-6 py-4
-                        text-sm
-                        whitespace-nowrap"
+                        text-sm"
                     >
                         <span v-if="col.type === 'badge'"
                             class="

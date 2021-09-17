@@ -5,3 +5,13 @@
 body {
     font-family: 'Inter';
 }
+
+.vc-container {
+    font-family: 'Inter';
+
+    @apply border-0
+}
+
+.vc-title {
+    @apply text-base
+}

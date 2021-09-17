@@ -3,20 +3,24 @@ import { ref, watch, defineEmits } from 'vue'
 
 const props = defineProps(['modelValue', 'type'])
 
-let localValue = ref(props.modelValue)
+let modelValue = ref(props.modelValue)
 const emit = defineEmits(['update:modelValue'])
 
-watch(localValue, value => emit('update:modelValue', value))
+watch(modelValue, value => emit('update:modelValue', value))
 // watch(props.modelValue, value => localValue = value)
 
 const getType = () => {
     return props.type === undefined ? 'text' : props.type
 }
+
+watch(() => props.modelValue, value => {
+    modelValue.value = value
+})
 </script>
 
 <template>
 <div class="">
-    <input :type="getType()" v-model="localValue"
+    <input :type="getType()" v-model="modelValue"
         class="
             rounded-md
             w-full

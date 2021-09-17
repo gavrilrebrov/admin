@@ -2,20 +2,31 @@
 import Icon from '../../../components/Icon.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { ref } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
+let search = ref('')
+
 const back = async () => {
     await store.dispatch('es/getList')
     router.push('/es')
+}
+
+const onSubmit = (e) => {
+    e.preventDefault()
+
+    store.dispatch('es/getList', {
+        search: search.value
+    })
 }
 </script>
 
 <template>
 <div>
-    <div class="bg-white px-6">
+    <div class="bg-white px-6 shadow sticky top-0">
         <div class="
                 container
                 mx-auto
@@ -46,10 +57,11 @@ const back = async () => {
                 </div>
             </div>
 
-            <div class="
+            <form class="
                     flex items-center
                     gap-x-2
                 "
+                @submit="onSubmit"
                 v-if="route.name === 'es-applications-list'"
             >
                 <input type="text" class="
@@ -59,6 +71,7 @@ const back = async () => {
                         focus:ring-blue-500
                         focus:border-blue-500
                     "
+                    v-model="search"
                     placeholder="Поиск"
                 >
 
@@ -67,13 +80,14 @@ const back = async () => {
                         p-2
                         rounded
                     "
+                    type="submit"
                 >
                     <Icon
                         icon="search"
                         class="w-5 text-white"
                     />
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 

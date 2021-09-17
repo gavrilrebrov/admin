@@ -15,6 +15,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@headlessui/vue": "^1.4.1",
     "@heroicons/vue": "^1.0.4",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
@@ -24,7 +25,9 @@
     "@vue/compiler-sfc": "^3.2.6",
     "autoprefixer": "^10.3.4",
     "postcss": "^8.3.6",
+    "query-string": "^7.0.1",
     "tailwindcss": "^2.2.15",
+    "v-calendar": "^3.0.0-alpha.5",
     "vite": "^2.5.4"
   }
 }

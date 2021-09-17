@@ -1,11 +1,34 @@
 <script setup>
 import Table from '../../../components/Table.vue'
-import { onMounted, watch, computed } from 'vue'
+import Icon from '../../../components/Icon.vue'
+import Field from '../../../components/form/Field.vue'
+import { watch, computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+} from '@headlessui/vue'
 
 const store = useStore()
 
 const project = computed(() => store.state.project)
+const tutors = computed(() => {
+    let tutors =  store.state.es.tutors.map(i => ({
+        label: i.name,
+        value: i.id
+    }))
+
+    tutors.unshift({
+        label: 'Все тьюторы',
+        value: null
+    })
+
+    return tutors
+})
+
+const isLoading = computed(() => store.state.isLoading)
 
 const list = computed(() => {
     let _list = store.state.es.list
@@ -15,7 +38,7 @@ const list = computed(() => {
     for (let i in _list) {
         let item = _list[i]
 
-        let q = JSON.parse(item.questionnaire)
+        let q = item.questionnaire ? JSON.parse(item.questionnaire) : []
         let r = q.find(i => i.question === 'Укажите предыдущую должность и место работы:')
 
         output.push({
@@ -25,8 +48,8 @@ const list = computed(() => {
                 email: item.email,
                 address: item.address
             },
-            workplace: r && r.answer,
-            tutor: item.tutor.name,
+            workplace: r ? r.answer : 'Не указано',
+            tutor: item.tutor ? item.tutor.name : 'Не указано',
             date: item.created_at,
             id: item.id,
             description: item.citizenCategory
@@ -39,6 +62,7 @@ const list = computed(() => {
 watch(project, value => {
     if (value) {
         store.dispatch('es/getList')
+        store.dispatch('es/getTutors')
     }
 })
 
@@ -48,18 +72,139 @@ const columns = [
     { label: 'Предыдущее место работы', key: 'workplace' },
     { label: 'Тьютор', key: 'tutor' },
     { label: 'Дата', key: 'date', type: 'datetime' },
-    { label: 'Документы', key: 'documents', type: 'download' }
+    { label: 'Документы', key: 'documents', type: 'download' },
 ]
 
-const onDownload = (id) => {
-    console.log('download: ', id)
+const onDownload = async (id) => {
+    store.dispatch('es/downloadDocuments', id)
+}
+
+const citizenCategories = [
+    { label: 'Все категории', value: null },
+    { label: 'Безработные граждане', value: 'Безработные граждане' },
+    { label: 'Граждане, ищущие работу и обратившиеся в органы службы занятости', value: 'Граждане, ищущие работу и обратившиеся в органы службы занятости' },
+    { label: 'Лица в возрасте 50-ти лет и старше', value: 'Лица в возрасте 50-ти лет и старше' },
+    { label: 'Лица предпенсионного возраста', value: 'Лица предпенсионного возраста' },
+    { label: 'Женщины в отпуске по уходу за детьми до трех лет', value: 'Женщины в отпуске по уходу за детьми до трех лет' },
+    { label: 'Женщины, не состоящие в трудовых отношениях и имеющие детей дошкольного возраста', value: 'Женщины, не состоящие в трудовых отношениях и имеющие детей дошкольного возраста' }
+]
+
+const sorts = [
+    { label: 'Сначала новые', value: null },
+    { label: 'Сначала старые', value: 'created_at:ASC' },
+    { label: 'по ФИО', value: 'name:ASC' }
+]
+
+let selectedCategory = ref(null)
+let selectedTutor = ref(null)
+let selectedDateRange = ref(null)
+let selectedSort = ref(null)
+
+watch(selectedCategory, value => {
+    store.dispatch('es/getList', {
+        citizenCategory: value,
+        tutor: selectedTutor.value,
+        sort: selectedSort.value,
+        period: selectedDateRange.value,
+    })
+})
+
+watch(selectedTutor, value => {
+    store.dispatch('es/getList', {
+        tutor: value,
+        citizenCategory: selectedCategory.value,
+        sort: selectedSort.value,
+        period: selectedDateRange.value,
+    })
+})
+
+watch(selectedDateRange, value => {
+    store.dispatch('es/getList', {
+        citizenCategory: selectedCategory.value,
+        tutor: selectedTutor.value,
+        period: value,
+        sort: selectedSort.value,
+    })
+})
+
+watch(selectedSort, value => {
+    store.dispatch('es/getList', {
+        tutor: selectedTutor.value,
+        citizenCategory: selectedCategory.value,
+        sort: value,
+        period: selectedDateRange.value,
+    })
+})
+
+let reset = () => {
+    selectedCategory.value = null
+    selectedDateRange.value = null
+    selectedTutor.value = null
+    selectedSort.value = null
+
+    store.dispatch('es/getList')
+}
+
+let exportExcel = () => {
+    store.dispatch('es/exportExcel', {
+        tutor: selectedTutor.value,
+        citizenCategory: selectedCategory.value,
+        sort: selectedSort.value,
+        period: selectedDateRange.value,
+    })
 }
 </script>
 
 <template>
 <div>
+    <div class="grid grid-cols-5 mb-5 gap-x-5 items-end">
+        <Field label="Категория" type="select" :items="citizenCategories" v-model="selectedCategory" />
+
+        <Field label="Тьютор" type="select" :items="tutors" v-model="selectedTutor" />
+
+        <Field label="Период" type="daterange" v-model="selectedDateRange" />
+
+        <Field label="Сортировка" type="select" :items="sorts" v-model="selectedSort" />
+
+        <button
+            class="
+                bg-blue-200
+                py-2
+                font-semibold
+                rounded-md
+                text-blue-500
+                text-sm
+                w-48
+                duration-200
+                hover:bg-blue-300
+            "
+            @click="reset"
+        >Сбросить все фильтры</button>
+    </div>
+
+    <div class="mb-5">
+        <!-- <button
+            class="
+                relative bg-green-500
+                rounded-md shadow-sm
+                text-white
+                px-3 py-2
+                text-left cursor-pointer
+                focus:outline-none
+                sm:text-sm
+                inline-flex items-center
+                gap-x-2
+            "
+            @click="exportExcel"
+        >
+            <Icon icon="excel" class="w-6" />
+            Экспорт в Excel
+        </button> -->
+    </div>
+
     <Table :columns="columns" :data="list" show="es"
         @onDownload="onDownload"
+        v-if="!isLoading"
     />
 </div>
 </template>

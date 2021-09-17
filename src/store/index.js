@@ -1,7 +1,6 @@
 import { createStore } from 'vuex'
 import VueCookies from 'vue-cookies'
-
-const apiUrl = 'http://localhost:1337'
+import config from '../config.json'
 
 import pages from './modules/pages'
 import es from './modules/es'
@@ -46,7 +45,7 @@ export default createStore({
 
             if (VueCookies.get('token')) {
                 try {
-                    const res = await fetch(apiUrl + '/users/me', {
+                    const res = await fetch(config.apiUrl + '/users/me', {
                         method: 'get',
                         headers: {
                             Authorization: 'Bearer ' + VueCookies.get('token')
@@ -59,7 +58,7 @@ export default createStore({
                         ctx.commit('user', json)
 
                         if (json.project) {
-                            const pRes = await fetch(apiUrl + `/projects/${json.project}`, {
+                            const pRes = await fetch(config.apiUrl + `/projects/${json.project}`, {
                                 method: 'get',
                                 headers: {
                                     Authorization: 'Bearer ' + VueCookies.get('token')
@@ -91,7 +90,7 @@ export default createStore({
             ctx.commit('isLoading', true)
 
             try {
-                const res = await fetch(apiUrl + '/auth/local', {
+                const res = await fetch(config.apiUrl + '/auth/local', {
                     method: 'post',
                     body: JSON.stringify({
                         identifier: data.login,
