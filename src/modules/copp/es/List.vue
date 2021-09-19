@@ -50,7 +50,7 @@ const list = computed(() => {
             },
             workplace: r ? r.answer : 'Не указано',
             tutor: item.tutor ? item.tutor.name : 'Не указано',
-            date: item.created_at,
+            date: item.registeredDate,
             id: item.id,
             description: item.citizenCategory
         })
@@ -91,7 +91,7 @@ const citizenCategories = [
 
 const sorts = [
     { label: 'Сначала новые', value: null },
-    { label: 'Сначала старые', value: 'created_at:ASC' },
+    { label: 'Сначала старые', value: 'registeredDate:ASC' },
     { label: 'по ФИО', value: 'name:ASC' }
 ]
 

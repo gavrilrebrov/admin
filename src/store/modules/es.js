@@ -36,7 +36,7 @@ export default {
 
             let query = {
                 project: ctx.rootState.project.id,
-                _sort: 'created_at:DESC',
+                _sort: 'registeredDate:DESC',
                 _limit: 200,
             }
 
@@ -60,8 +60,8 @@ export default {
                 let start = moment(params.period.start).startOf('day')
                 let end = moment(params.period.end).endOf('day')
 
-                query['created_at_gte'] = start.format('YYYY-MM-DD HH:mm:ss')
-                query['created_at_lte'] = end.format('YYYY-MM-DD HH:mm:ss')
+                query['registeredDate_gte'] = start.format('YYYY-MM-DD HH:mm:ss')
+                query['registeredDate_lte'] = end.format('YYYY-MM-DD HH:mm:ss')
             }
 
             query = qs.stringify(query)
