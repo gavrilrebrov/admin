@@ -15,3 +15,15 @@ body {
 .vc-title {
     @apply text-base
 }
+
+.Pagination .Page {
+    @apply text-blue-500 flex items-center justify-center h-7 w-7 rounded-full
+}
+
+.Pagination .Page-active {
+    @apply border-0 text-white bg-blue-500 !important
+}
+
+.Pagination .PaginationControl {
+    @apply text-blue-500 !important
+}

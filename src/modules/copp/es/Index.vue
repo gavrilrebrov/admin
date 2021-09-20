@@ -1,8 +1,10 @@
 <script setup>
 import Icon from '../../../components/Icon.vue'
 import { useRoute, useRouter } from 'vue-router'
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 import { useStore } from 'vuex'
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,16 +19,35 @@ const back = async () => {
 
 const onSubmit = (e) => {
     e.preventDefault()
-
-    store.dispatch('es/getList', {
-        search: search.value
-    })
+    store.commit('es/filter', { key: 'search', value: search.value })
+    store.dispatch('es/getList')
 }
+
+const count = computed(() => store.state.es.count)
+
+let page = ref(1)
+const offset = 100
+let totalPages = computed(() => {
+    let pages = 0
+
+    pages = Math.floor(count.value / offset)
+
+    if (count.value % offset) {
+        pages++
+    }
+
+    return pages
+})
+
+watch(page, value => {
+    store.commit('es/filter', { key: 'page', value })
+    store.dispatch('es/getList')
+})
 </script>
 
 <template>
 <div>
-    <div class="bg-white px-6 shadow sticky top-0">
+    <div class="bg-white px-6 shadow sticky top-0 z-30">
         <div class="
                 container
                 mx-auto
@@ -34,6 +55,7 @@ const onSubmit = (e) => {
                 lg:flex
                 lg:items-center
                 lg:justify-between
+                lg:gap-x-6
             "
         >
             <div class="
@@ -55,6 +77,24 @@ const onSubmit = (e) => {
                 <div v-if="route.name === 'es-applications-item'">
                     {{ `Заявка №${route.params.applicationId}` }}
                 </div>
+            </div>
+
+            <div v-if="route.name === 'es-applications-list'"
+                class="
+                    flex-grow
+                    text-sm
+                    text-gray-500
+                "
+            >
+                Найдено записей: {{ count }}
+            </div>
+
+            <div v-if="route.name === 'es-applications-list' && totalPages > 100">
+                <VPagination
+                    v-model="page"
+                    :pages="totalPages"
+                    :range-size="1"
+                />
             </div>
 
             <form class="

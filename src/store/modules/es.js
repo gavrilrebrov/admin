@@ -11,8 +11,17 @@ export default {
         return {
             list: [],
             item: null,
-
+            count: 0,
             tutors: [],
+            filter: {
+                citizenCategory: null,
+                tutor: null,
+                sort: 'registeredDate:DESC',
+                page: 1,
+                period: null,
+                limit: 100,
+                search: null,
+            },
         }
     },
 
@@ -27,6 +36,26 @@ export default {
 
         tutors (state, value) {
             state.tutors = value
+        },
+
+        count (state, value) {
+            state.count = value
+        },
+
+        filter (state, value) {
+            state.filter[value.key] = value.value
+        },
+
+        resetFilter (state, value) {
+            state.filter = {
+                citizenCategory: null,
+                tutor: null,
+                sort: 'registeredDate:DESC',
+                page: 1,
+                period: null,
+                limit: 100,
+                search: null,
+            }
         }
     },
 
@@ -36,29 +65,33 @@ export default {
 
             let query = {
                 project: ctx.rootState.project.id,
-                _sort: 'registeredDate:DESC',
-                _limit: 200,
+                _sort: ctx.state.filter.sort,
+                _limit: ctx.state.filter.limit,
             }
 
-            if (params && params.search) {
-                query['name_contains'] = params.search
+            if (ctx.state.filter.search) {
+                query['name_contains'] = ctx.state.filter.search
             }
 
-            if (params && params.citizenCategory) {
-                query['citizenCategory'] = params.citizenCategory
+            if (ctx.state.filter.citizenCategory) {
+                query['citizenCategory'] = ctx.state.filter.citizenCategory
             }
 
-            if (params && params.tutor) {
-                query['tutor'] = params.tutor
+            if (ctx.state.filter.tutor) {
+                query['tutor'] = ctx.state.filter.tutor
             }
 
-            if (params && params.sort) {
-                query['_sort'] = params.sort
+            if (ctx.state.filter.sort) {
+                query['_sort'] = ctx.state.filter.sort
             }
 
-            if (params && params.period) {
-                let start = moment(params.period.start).startOf('day')
-                let end = moment(params.period.end).endOf('day')
+            if (ctx.state.filter.page) {
+                query['_start'] = ((ctx.state.filter.page - 1) * ctx.state.filter.limit)
+            }
+
+            if (ctx.state.filter.period) {
+                let start = moment(ctx.state.filter.period.start).startOf('day')
+                let end = moment(ctx.state.filter.period.end).endOf('day')
 
                 query['registeredDate_gte'] = start.format('YYYY-MM-DD HH:mm:ss')
                 query['registeredDate_lte'] = end.format('YYYY-MM-DD HH:mm:ss')
@@ -74,10 +107,22 @@ export default {
                     }
                 })
 
+                const countRes = await fetch(`${config.apiUrl}/applications/count?${query}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
                 const json = await res.json()
+                const countJson = await countRes.json()
 
                 if (res.ok) {
                     ctx.commit('list', json)
+                }
+
+                if (countRes.ok) {
+                    ctx.commit('count', countJson)
                 }
             } catch (err) {
                 console.error('err: ', err)
@@ -168,10 +213,68 @@ export default {
             ctx.commit('isLoading', false, { root: true })
         },
 
-        async exportExcel (ctx, params) {
+        async exportExcel (ctx) {
             ctx.commit('isLoading', true, { root: true })
 
-            console.log('params: ', params)
+            try {
+                let query = {
+                    project: ctx.rootState.project.id,
+                    _sort: ctx.state.filter.sort,
+                    _limit: ctx.state.filter.limit,
+                }
+
+                if (ctx.state.filter.search) {
+                    query['name_contains'] = ctx.state.filter.search
+                }
+
+                if (ctx.state.filter.citizenCategory) {
+                    query['citizenCategory'] = ctx.state.filter.citizenCategory
+                }
+
+                if (ctx.state.filter.tutor) {
+                    query['tutor'] = ctx.state.filter.tutor
+                }
+
+                if (ctx.state.filter.sort) {
+                    query['_sort'] = ctx.state.filter.sort
+                }
+
+                if (ctx.state.filter.page) {
+                    query['_start'] = ((ctx.state.filter.page - 1) * ctx.state.filter.limit)
+                }
+
+                if (ctx.state.filter.period) {
+                    let start = moment(ctx.state.filter.period.start).startOf('day')
+                    let end = moment(ctx.state.filter.period.end).endOf('day')
+
+                    query['registeredDate_gte'] = start.format('YYYY-MM-DD HH:mm:ss')
+                    query['registeredDate_lte'] = end.format('YYYY-MM-DD HH:mm:ss')
+                }
+
+                query = qs.stringify(query)
+
+                const res = await fetch(`${config.apiUrl}/applications/export?${query}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                if (res.ok) {
+                    const blob = await res.blob()
+                    const url = window.URL.createObjectURL(blob);
+
+                    let a = document.createElement('a')
+                    a.href = url
+                    a.target = '_blank'
+
+                    document.body.appendChild(a)
+                    a.click()
+                    document.body.removeChild(a)
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
 
             ctx.commit('isLoading', false, { root: true })
         }

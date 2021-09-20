@@ -59,6 +59,7 @@ const list = computed(() => {
     return output
 })
 
+
 watch(project, value => {
     if (value) {
         store.dispatch('es/getList')
@@ -101,39 +102,27 @@ let selectedDateRange = ref(null)
 let selectedSort = ref(null)
 
 watch(selectedCategory, value => {
-    store.dispatch('es/getList', {
-        citizenCategory: value,
-        tutor: selectedTutor.value,
-        sort: selectedSort.value,
-        period: selectedDateRange.value,
-    })
+    store.commit('es/filter', { key: 'citizenCategory', value })
+    store.commit('es/filter', { key: 'page', value: 1 })
+    store.dispatch('es/getList')
 })
 
 watch(selectedTutor, value => {
-    store.dispatch('es/getList', {
-        tutor: value,
-        citizenCategory: selectedCategory.value,
-        sort: selectedSort.value,
-        period: selectedDateRange.value,
-    })
+    store.commit('es/filter', { key: 'tutor', value })
+    store.commit('es/filter', { key: 'page', value: 1 })
+    store.dispatch('es/getList')
 })
 
 watch(selectedDateRange, value => {
-    store.dispatch('es/getList', {
-        citizenCategory: selectedCategory.value,
-        tutor: selectedTutor.value,
-        period: value,
-        sort: selectedSort.value,
-    })
+    store.commit('es/filter', { key: 'period', value })
+    store.commit('es/filter', { key: 'page', value: 1 })
+    store.dispatch('es/getList')
 })
 
 watch(selectedSort, value => {
-    store.dispatch('es/getList', {
-        tutor: selectedTutor.value,
-        citizenCategory: selectedCategory.value,
-        sort: value,
-        period: selectedDateRange.value,
-    })
+    store.commit('es/filter', { key: 'sort', value })
+    store.commit('es/filter', { key: 'page', value: 1 })
+    store.dispatch('es/getList')
 })
 
 let reset = () => {
@@ -142,16 +131,13 @@ let reset = () => {
     selectedTutor.value = null
     selectedSort.value = null
 
+    store.commit('es/resetFilter')
+
     store.dispatch('es/getList')
 }
 
 let exportExcel = () => {
-    store.dispatch('es/exportExcel', {
-        tutor: selectedTutor.value,
-        citizenCategory: selectedCategory.value,
-        sort: selectedSort.value,
-        period: selectedDateRange.value,
-    })
+    store.dispatch('es/exportExcel')
 }
 </script>
 
@@ -183,7 +169,7 @@ let exportExcel = () => {
     </div>
 
     <div class="mb-5">
-        <!-- <button
+        <button
             class="
                 relative bg-green-500
                 rounded-md shadow-sm
@@ -199,7 +185,7 @@ let exportExcel = () => {
         >
             <Icon icon="excel" class="w-6" />
             Экспорт в Excel
-        </button> -->
+        </button>
     </div>
 
     <Table :columns="columns" :data="list" show="es"

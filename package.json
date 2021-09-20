@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@headlessui/vue": "^1.4.1",
+    "@hennge/vue3-pagination": "^1.0.17",
     "@heroicons/vue": "^1.0.4",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
