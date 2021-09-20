@@ -89,7 +89,7 @@ watch(page, value => {
                 Найдено записей: {{ count }}
             </div>
 
-            <div v-if="route.name === 'es-applications-list' && totalPages > 100">
+            <div v-if="route.name === 'es-applications-list' && count > 100">
                 <VPagination
                     v-model="page"
                     :pages="totalPages"
