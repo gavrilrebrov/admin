@@ -22,6 +22,12 @@ onMounted(async () => {
 })
 
 const logout = () => store.dispatch('logout')
+
+const title = computed(() => {
+    if (user.value.role.layout === 'employment-support') {
+        return 'Содействие занятости'
+    }
+})
 </script>
 
 <template>
@@ -37,16 +43,15 @@ const logout = () => store.dispatch('logout')
                 text-white
             "
         >
-            <!-- <div>
+            <div>
                 <div class="
                     font-semibold
                         py-4
                     "
-                    v-if="project"
                 >
-                    {{ project.name }}
+                    {{ title }}
                 </div>
-            </div> -->
+            </div>
 
             <div class="flex items-center py-4">
                 <Icon icon="user"
@@ -66,95 +71,4 @@ const logout = () => store.dispatch('logout')
 
     <router-view />
 </div>
-<!-- <div class="
-    w-screen
-    h-screen
-    flex
-">
-    <div
-        class="
-            bg-gray-800
-            w-60
-            flex flex-col
-            justify-between
-            flex-shrink-0
-        "
-    >
-        <div class="
-                bg-gray-700
-                py-3 px-5
-                flex items-center
-                gap-x-3
-            "
-        >
-            <div class="
-                    text-gray-800
-                    w-10
-                    p-2
-                    bg-gray-500
-                    rounded-full
-                    flex-shrink-0
-                "
-            >
-                <Icon icon="user" />
-            </div>
-
-            <div class="
-                    flex-grow-1 w-full text-sm
-                "
-                v-if="user"
-            >
-                <div class="font-medium text-gray-100">
-                    {{ user.username }}
-                </div>
-
-                <div class="text-gray-400 text-xs">
-                    {{ user.role.name }}
-                </div>
-            </div>
-
-            <button class="w-6 text-blue-500 flex-shrink-0" title="Выход"
-                @click="logout"
-            >
-                <Icon icon="logout" />
-            </button>
-        </div>
-
-        <div class="
-                flex flex-col p-2 flex-grow-1 h-full gap-y-1
-            "
-        >
-            <router-link to="/employment-support"
-                class="
-                    flex items-center
-                    p-2
-                    gap-x-4
-                    hover:bg-gray-900
-                    cursor-pointer
-                    rounded-md
-                    duration-200
-                "
-            >
-                <Icon icon="clipboard-list"
-                    class="w-6 text-gray-500"
-                />
-
-                <div class="
-                        font-medium text-gray-300 text-sm
-                    "
-                >
-                    Содействие занятости
-                </div>
-            </router-link>
-        </div>
-
-        <div class="p-5 bg-gray-800 text-sm font-semibold text-gray-500">
-            v{{ pkg.version }}
-        </div>
-    </div>
-
-    <div class="w-full h-full bg-gray-100">
-        <router-view />
-    </div>
-</div> -->
 </template>

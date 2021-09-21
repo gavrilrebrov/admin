@@ -21,6 +21,6 @@ onMounted(() => {
 
     <Sidebar v-if="projectType && projectType === 'site'" />
 
-    <Copp v-if="user && user.role && user.role.name === 'copp'" />
+    <Copp v-if="user && user.role && user.role.layout === 'employment-support'" />
 </div>
 </template>
