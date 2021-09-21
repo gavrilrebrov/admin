@@ -180,8 +180,8 @@ export default {
 
                 const blob = await res.blob()
 
-                const url = window.URL || window.webkitURL;
-                const link = url.createObjectURL(blob);
+                const _url = window.URL || window.webkitURL;
+                const link = _url.createObjectURL(blob);
 
                 let a = document.createElement('a')
                 a.href = link

@@ -331,7 +331,7 @@ onMounted(() => {
                                         </div>
 
                                         <div class="ml-4 flex-shrink-0">
-                                            <a download :href="`${config.apiUrl}${doc.url}`" class="font-medium text-blue-600 hover:text-blue-500">
+                                            <a download :href="`${config.apiUrl.copp}${doc.url}`" class="font-medium text-blue-600 hover:text-blue-500">
                                                 Скачать
                                             </a>
                                         </div>
