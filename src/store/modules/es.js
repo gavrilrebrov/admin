@@ -194,7 +194,7 @@ export default {
 
             try {
                 let query = {
-                    project: ctx.rootState.project.id,
+                    project: ctx.rootState.user.project.id,
                     _sort: ctx.state.filter.sort,
                     _limit: ctx.state.filter.limit,
                 }
