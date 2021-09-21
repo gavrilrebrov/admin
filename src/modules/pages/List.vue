@@ -16,7 +16,7 @@ const pages = computed(() => store.getters['pages/list'])
             :key="item.id"
         >
             <div class="flex items-center px-5 py-4 border-b justify-between">
-                <div class="font-medium">
+                <div class="font-medium text-sm">
                     {{ item.name }}
                 </div>
 
@@ -31,7 +31,7 @@ const pages = computed(() => store.getters['pages/list'])
                     :key="child.id"
                 >
                     <div class="flex items-center pt-0 px-5 py-4 justify-between">
-                        <div class="font-medium">
+                        <div class="font-medium text-sm">
                             {{ child.name }}
                         </div>
 

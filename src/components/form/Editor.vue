@@ -17,13 +17,17 @@ const editor = useEditor({
     },
     editorProps: {
         attributes: {
-            class: 'prose max-w-full h-96 overflow-hidden border border-gray-300 rounded-md w-full p-3 focus:ring-blue-500 focus:border-blue-500 focus:ring-1 focus:outline-none'
+            class: 'prose max-w-full h-96 overflow-hidden border border-gray-300 rounded-md w-full p-3 focus:ring-blue-500 focus:border-blue-500 focus:ring-1 focus:outline-none text-sm'
         }
     }
 })
 
 watch(() => props.modelValue, value => {
-    editor.value.commands.setContent(value)
+    const isSame = editor.value.getHTML() === value
+
+    if (isSame) return
+
+    editor.value.commands.setContent(value, false)
 })
 </script>
 
@@ -185,8 +189,6 @@ watch(() => props.modelValue, value => {
                 <Icon icon="redo" class="w-6" />
             </button>
         </div>
-
-
     </div>
 
     <EditorContent :editor="editor" />

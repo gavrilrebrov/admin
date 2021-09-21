@@ -27,6 +27,7 @@ watch(() => props.modelValue, value => {
             shadow-sm
             border-gray-300
             focus:ring-blue-500 focus:border-blue-500
+            text-sm
         "
     />
 </div>
