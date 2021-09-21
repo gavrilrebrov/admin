@@ -121,7 +121,7 @@ let reset = () => {
     selectedCategory.value = null
     selectedDateRange.value = null
     selectedTutor.value = null
-    selectedSort.value = null
+    selectedSort.value = 'registeredDate:DESC'
 
     store.commit('es/resetFilter')
 
