@@ -18,6 +18,8 @@ export default createStore({
 
             user: null,
             project: null,
+
+            isListLoading: false
         }
     },
 
@@ -35,6 +37,10 @@ export default createStore({
         },
 
         project (state, value) {
+            state.project = value
+        },
+
+        isListLoading (state, value) {
             state.project = value
         }
     },
@@ -56,25 +62,6 @@ export default createStore({
 
                     if (res.ok) {
                         ctx.commit('user', json)
-
-                        if (json.project) {
-                            const pRes = await fetch(config.apiUrl + `/projects/${json.project}`, {
-                                method: 'get',
-                                headers: {
-                                    Authorization: 'Bearer ' + VueCookies.get('token')
-                                }
-                            })
-
-                            const pJson = await pRes.json()
-
-                            if (pRes.ok) {
-                                ctx.commit('project', pJson)
-
-                                if (pJson.pages && pJson.pages.length > 0) {
-                                    ctx.commit('pages/list', pJson.pages)
-                                }
-                            }
-                        }
                     }
                 } catch (err) {
                     console.error('err: ', err)

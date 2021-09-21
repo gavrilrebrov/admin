@@ -12,9 +12,9 @@ const store = useStore()
 
 let search = ref('')
 
-const back = async () => {
-    await store.dispatch('es/getList')
+const back = () => {
     router.push('/es')
+    store.dispatch('es/getList')
 }
 
 const onSubmit = (e) => {
@@ -39,7 +39,7 @@ let totalPages = computed(() => {
     return pages
 })
 
-watch(page, value => {
+watch(page, async value => {
     store.commit('es/filter', { key: 'page', value })
     store.dispatch('es/getList')
 })

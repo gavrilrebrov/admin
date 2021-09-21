@@ -2,7 +2,7 @@
 import Icon from '../components/Icon.vue'
 import pkg from '../../package.json'
 
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 
@@ -10,11 +10,11 @@ const store = useStore()
 const router = useRouter()
 const route = useRoute()
 const user = computed(() => store.state.user)
-const project = computed(() => store.state.project)
 
-watch(project, async (value) => {
-    if (value.slug === 'employment-support') {
+onMounted(async () => {
+    if (user.value.role.layout === 'employment-support') {
         if (route.name !== 'es-applications-item') {
+            await store.dispatch('es/getTutors')
             await store.dispatch('es/getList')
             router.push('/es')
         }
@@ -37,16 +37,18 @@ const logout = () => store.dispatch('logout')
                 text-white
             "
         >
-            <div class="
+            <!-- <div>
+                <div class="
                     font-semibold
-                    py-4
-                "
-                v-if="project"
-            >
-                {{ project.name }}
-            </div>
+                        py-4
+                    "
+                    v-if="project"
+                >
+                    {{ project.name }}
+                </div>
+            </div> -->
 
-            <div class="flex items-center">
+            <div class="flex items-center py-4">
                 <Icon icon="user"
                     class="w-6 mr-3"
                 />

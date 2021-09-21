@@ -28,7 +28,7 @@ const tutors = computed(() => {
     return tutors
 })
 
-const isLoading = computed(() => store.state.isLoading)
+const isLoading = computed(() => store.state.es.isLoading)
 
 const list = computed(() => {
     let _list = store.state.es.list
@@ -59,14 +59,6 @@ const list = computed(() => {
     return output
 })
 
-
-watch(project, value => {
-    if (value) {
-        store.dispatch('es/getList')
-        store.dispatch('es/getTutors')
-    }
-})
-
 const columns = [
     { label: 'Заявитель', key: 'name', type: 'description' },
     { label: 'Контакты', key: 'contacts', type: 'contacts' },
@@ -91,7 +83,7 @@ const citizenCategories = [
 ]
 
 const sorts = [
-    { label: 'Сначала новые', value: null },
+    { label: 'Сначала новые', value: 'registeredDate:DESC' },
     { label: 'Сначала старые', value: 'registeredDate:ASC' },
     { label: 'по ФИО', value: 'name:ASC' }
 ]
@@ -99,7 +91,7 @@ const sorts = [
 let selectedCategory = ref(null)
 let selectedTutor = ref(null)
 let selectedDateRange = ref(null)
-let selectedSort = ref(null)
+let selectedSort = ref('registeredDate:DESC')
 
 watch(selectedCategory, value => {
     store.commit('es/filter', { key: 'citizenCategory', value })
@@ -186,6 +178,10 @@ let exportExcel = () => {
             <Icon icon="excel" class="w-6" />
             Экспорт в Excel
         </button>
+    </div>
+
+    <div v-if="isLoading" class="w-full h-full flex items-center justify-center">
+        <Icon icon="loader" class="w-16 h-16 text-blue-500 animate-spin" />
     </div>
 
     <Table :columns="columns" :data="list" show="es"

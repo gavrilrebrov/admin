@@ -19,9 +19,10 @@ export default {
                 sort: 'registeredDate:DESC',
                 page: 1,
                 period: null,
-                limit: 100,
+                limit: 50,
                 search: null,
             },
+            isLoading: false,
         }
     },
 
@@ -53,18 +54,22 @@ export default {
                 sort: 'registeredDate:DESC',
                 page: 1,
                 period: null,
-                limit: 100,
+                limit: 50,
                 search: null,
             }
+        },
+
+        isLoading (state, value) {
+            state.isLoading = value
         }
     },
 
     actions: {
         async getList (ctx, params = null) {
-            ctx.commit('isLoading', true, { root: true })
+            ctx.commit('isLoading', true)
 
             let query = {
-                project: ctx.rootState.project.id,
+                project: ctx.rootState.user.project.id,
                 _sort: ctx.state.filter.sort,
                 _limit: ctx.state.filter.limit,
             }
@@ -128,7 +133,7 @@ export default {
                 console.error('err: ', err)
             }
 
-            ctx.commit('isLoading', false, { root: true })
+            ctx.commit('isLoading', false)
         },
 
         async getItem (ctx, id) {
@@ -177,35 +182,6 @@ export default {
                 document.body.appendChild(a)
                 a.click()
                 document.body.removeChild(a)
-            } catch (err) {
-                console.error('err: ', err)
-            }
-
-            ctx.commit('isLoading', false, { root: true })
-        },
-
-        async getTutors (ctx) {
-            ctx.commit('isLoading', true, { root: true })
-
-            let query = {
-                project: ctx.rootState.project.id
-            }
-
-            query = qs.stringify(query)
-
-            try {
-                const res = await fetch(`${config.apiUrl}/tutors?${query}`, {
-                    method: 'get',
-                    headers: {
-                        Authorization: 'Bearer ' + VueCookies.get('token')
-                    }
-                })
-
-                const json = await res.json()
-
-                if (res.ok) {
-                    ctx.commit('tutors', json)
-                }
             } catch (err) {
                 console.error('err: ', err)
             }
@@ -277,6 +253,33 @@ export default {
             }
 
             ctx.commit('isLoading', false, { root: true })
+        },
+
+        async getTutors (ctx) {
+            ctx.commit('isLoading', true)
+            let tquery = {
+                project: ctx.rootState.user.project.id
+            }
+
+            tquery = qs.stringify(tquery)
+
+            try {
+                const tres = await fetch(`${config.apiUrl}/tutors?${tquery}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const tjson = await tres.json()
+
+                if (tres.ok) {
+                    ctx.commit('tutors', tjson)
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
+            ctx.commit('isLoading', false)
         }
     },
 }
