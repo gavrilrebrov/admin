@@ -20,6 +20,7 @@ const back = () => {
 const onSubmit = (e) => {
     e.preventDefault()
     store.commit('es/filter', { key: 'search', value: search.value })
+    store.commit('es/filter', { key: 'page', value: 1 })
     store.dispatch('es/getList')
 }
 
