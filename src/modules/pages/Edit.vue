@@ -2,6 +2,7 @@
 import Field from '../../components/form/Field.vue'
 import Card from '../../components/Card.vue'
 import Icon from '../../components/Icon.vue'
+import Notice from '../../components/Notice.vue'
 
 import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
@@ -21,16 +22,14 @@ const pages = computed(() => {
 
     list.unshift({ label: 'Нет родителя', value: null })
 
-    console.log('page: ', page)
-
     return list
 })
 
 onMounted(async () => {
-    await store.dispatch('pages/getItem', route.params.pageId)
+    if (route.name === 'pages-edit') {
+        await store.dispatch('pages/getItem', route.params.pageId)
+    }
 })
-
-
 
 const fields = [
     [
@@ -61,30 +60,80 @@ const fields = [
     ]
 ];
 
-let values = ref({})
+let values = ref({
+    name: '',
+    page: null,
+    content: '',
+    slug: '',
+})
+
+const title = computed(() => {
+    return route.name === 'pages-edit' ? 'Редактирование страницы' : 'Создание страницы'
+})
+
 watch(page, value => {
     if (value) {
-
         values.value.name = value.name
         values.value.page = value.page && value.page.id
         values.value.content = value.content
         values.value.slug = value.slug
     }
 })
+
+const save = () => {
+    store.commit('notice', null)
+
+    if (
+        values.value.name === '' ||
+        values.value.slug === ''
+    ) {
+        store.commit('notice', {
+            type: 'error',
+            text: 'Заполните поля Название и Идентификатор'
+        })
+    } else {
+        store.dispatch('pages/save', {
+            data: values.value,
+            id: route.name === 'pages-edit' ? route.params.pageId : null
+        })
+    }
+}
 </script>
 
 <template>
-<div class="p-5 container mx-auto lg:max-w-screen-lg" v-if="page">
+<div class="p-5 container mx-auto lg:max-w-screen-lg">
     <Card>
         <template #header>
             <router-link class="mr-5" to="/pages">
                 <Icon icon="arrow-left" class="w-6 text-blue-500" />
             </router-link>
 
-            <div class="font-semibold text-gray-600 text-lg">
-                Редактирование страницы
+            <div class="font-medium text-gray-900 text-lg flex-grow">
+                {{ title }}
+            </div>
+
+            <div>
+                <button
+                    class="
+                        text-sm
+                        font-semibold
+                        bg-blue-500
+                        text-white
+                        py-2 px-4
+                        rounded-md
+                        inline-flex
+                        items-center
+                        gap-x-1
+                    "
+                    @click="save"
+                >
+                    <Icon icon="check" class="h-5 w-5" />
+                    <span>Сохранить</span>
+                </button>
             </div>
         </template>
+
+        <Notice class="mb-4" />
 
         <div class="flex flex-col gap-y-4">
             <div class="flex gap-x-4" v-for="row, rowIndex in fields" :key="rowIndex">

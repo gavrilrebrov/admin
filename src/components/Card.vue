@@ -6,8 +6,8 @@ const slots = useSlots()
 </script>
 
 <template>
-<div class="bg-white rounded-md shadow">
-    <div class="p-5 border-b flex items-center" v-if="slots.header">
+<div class="bg-white rounded-lg shadow">
+    <div class="py-4 px-5 sm:px-6 border-b flex items-center justify-between" v-if="slots.header">
         <slot name="header" />
     </div>
 

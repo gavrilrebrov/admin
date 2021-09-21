@@ -14,13 +14,11 @@ let selected = computed(() => {
 })
 
 const onSelect = (e, item) => {
-    console.log('e: ', e)
     modelValue.value = item.value
     active.value = false
 }
 
 const onFocusOut = () => {
-    console.log('onFocusOut')
     active.value = false
 }
 

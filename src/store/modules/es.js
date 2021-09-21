@@ -4,6 +4,14 @@ import moment from 'moment'
 
 import config from '../../config.json'
 
+let url
+
+if (window.location.hostname === 'admin.copp14.ru') {
+    url = config.apiUrl.copp
+} else {
+    url = config.apiUrl.grebrov
+}
+
 export default {
     namespaced: true,
 
@@ -105,14 +113,14 @@ export default {
             query = qs.stringify(query)
 
             try {
-                const res = await fetch(`${config.apiUrl}/applications/?${query}`, {
+                const res = await fetch(`${url}/applications/?${query}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
                     }
                 })
 
-                const countRes = await fetch(`${config.apiUrl}/applications/count?${query}`, {
+                const countRes = await fetch(`${url}/applications/count?${query}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
@@ -140,7 +148,7 @@ export default {
             ctx.commit('isLoading', true, { root: true })
 
             try {
-                const res = await fetch(`${config.apiUrl}/applications/${id}`, {
+                const res = await fetch(`${url}/applications/${id}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
@@ -163,7 +171,7 @@ export default {
             ctx.commit('isLoading', true, { root: true })
 
             try {
-                const res = await fetch(`${config.apiUrl}/applications/${id}/documents`, {
+                const res = await fetch(`${url}/applications/${id}/documents`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
@@ -229,7 +237,7 @@ export default {
 
                 query = qs.stringify(query)
 
-                const res = await fetch(`${config.apiUrl}/applications/export?${query}`, {
+                const res = await fetch(`${url}/applications/export?${query}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
@@ -264,7 +272,7 @@ export default {
             tquery = qs.stringify(tquery)
 
             try {
-                const tres = await fetch(`${config.apiUrl}/tutors?${tquery}`, {
+                const tres = await fetch(`${url}/tutors?${tquery}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')

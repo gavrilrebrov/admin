@@ -27,7 +27,7 @@ const onSubmit = (e) => {
 const count = computed(() => store.state.es.count)
 
 let page = ref(1)
-const offset = 100
+const offset = 50
 let totalPages = computed(() => {
     let pages = 0
 

@@ -12,6 +12,11 @@ export default {
             name: 'pages'
         },
         {
+            path: 'create',
+            component: PagesEdit,
+            name: 'pages-create'
+        },
+        {
             path: ':pageId',
             component: PagesEdit,
             name: 'pages-edit'

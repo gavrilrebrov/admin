@@ -5,6 +5,14 @@ import config from '../config.json'
 import pages from './modules/pages'
 import es from './modules/es'
 
+let url
+
+if (window.location.hostname === 'admin.copp14.ru') {
+    url = config.apiUrl.copp
+} else {
+    url = config.apiUrl.grebrov
+}
+
 export default createStore({
     modules: {
         pages,
@@ -51,7 +59,7 @@ export default createStore({
 
             if (VueCookies.get('token')) {
                 try {
-                    const res = await fetch(config.apiUrl + '/users/me', {
+                    const res = await fetch(url + '/users/me', {
                         method: 'get',
                         headers: {
                             Authorization: 'Bearer ' + VueCookies.get('token')
@@ -77,7 +85,7 @@ export default createStore({
             ctx.commit('isLoading', true)
 
             try {
-                const res = await fetch(config.apiUrl + '/auth/local', {
+                const res = await fetch(url + '/auth/local', {
                     method: 'post',
                     body: JSON.stringify({
                         identifier: data.login,

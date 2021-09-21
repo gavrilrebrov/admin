@@ -21,6 +21,10 @@ const editor = useEditor({
         }
     }
 })
+
+watch(() => props.modelValue, value => {
+    editor.value.commands.setContent(value)
+})
 </script>
 
 <template>

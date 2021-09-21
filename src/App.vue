@@ -8,8 +8,6 @@ import Copp from './layouts/Copp.vue'
 const store = useStore()
 const user = computed(() => store.state.user)
 
-const projectType = computed(() => store.state.project && store.state.project.type)
-
 onMounted(() => {
     store.dispatch('init')
 })
@@ -19,7 +17,7 @@ onMounted(() => {
 <div>
     <Login v-if="!user" />
 
-    <Sidebar v-if="projectType && projectType === 'site'" />
+    <Sidebar v-if="user && user.role.name === 'site'" />
 
     <Copp v-if="user && user.role && user.role.name === 'employment-support'" />
 </div>

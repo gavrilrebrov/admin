@@ -1,8 +1,21 @@
 <script setup>
 import Button from '../../components/Button.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const router = useRouter()
+
+onMounted(() => {
+    store.dispatch('pages/getList')
+})
 
 const route = useRoute()
+
+const goToCreate = () => {
+    router.push('/pages/create')
+}
 </script>
 
 <template>
@@ -13,9 +26,7 @@ const route = useRoute()
         </div>
 
         <div class="inline-flex pag-x-4 px-5">
-            <Button label="Сохранить" icon="save" v-if="route.name === 'pages-edit'" />
-
-            <Button label="Создать" icon="plus" v-if="route.name === 'pages'" />
+            <Button @click="goToCreate" label="Создать" icon="plus" v-if="route.name === 'pages'" />
         </div>
     </div>
 
