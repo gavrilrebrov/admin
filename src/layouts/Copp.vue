@@ -12,11 +12,16 @@ const route = useRoute()
 const user = computed(() => store.state.user)
 
 onMounted(async () => {
-    if (user.value.role.layout === 'employment-support') {
+    if (user.value.role.name === 'employment-support') {
         if (route.name !== 'es-applications-item') {
             await store.dispatch('es/getTutors')
             await store.dispatch('es/getList')
             router.push('/es')
+        }
+    } else if (user.value.role.name === 'teams') {
+        if (route.name !== 'teams-item') {
+            await store.dispatch('teams/getList')
+            router.push('/teams')
         }
     }
 })
@@ -24,8 +29,10 @@ onMounted(async () => {
 const logout = () => store.dispatch('logout')
 
 const title = computed(() => {
-    if (user.value.role.layout === 'employment-support') {
+    if (user.value.role.name === 'employment-support') {
         return 'Содействие занятости'
+    } else if (user.value.role.name === 'teams') {
+        return 'PROопережение'
     }
 })
 </script>

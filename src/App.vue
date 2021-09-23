@@ -19,6 +19,6 @@ onMounted(() => {
 
     <Sidebar v-if="user && user.role.name === 'site'" />
 
-    <Copp v-if="user && user.role && user.role.name === 'employment-support'" />
+    <Copp v-if="user && user.role && (user.role.name === 'employment-support' || user.role.name === 'teams')" />
 </div>
 </template>

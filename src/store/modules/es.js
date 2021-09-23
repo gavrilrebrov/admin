@@ -4,13 +4,7 @@ import moment from 'moment'
 
 import config from '../../config.json'
 
-let url
-
-if (window.location.hostname === 'admin.copp14.ru') {
-    url = config.apiUrl.copp
-} else {
-    url = config.apiUrl.grebrov
-}
+let url = config.apiUrl.copp
 
 export default {
     namespaced: true,

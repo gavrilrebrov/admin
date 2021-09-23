@@ -4,10 +4,13 @@ import config from '../config.json'
 
 import pages from './modules/pages'
 import es from './modules/es'
+import teams from './modules/teams'
 
 let url
 
 if (window.location.hostname === 'admin.copp14.ru') {
+    url = config.apiUrl.copp
+} else if (window.location.hostname === 'localhost') {
     url = config.apiUrl.copp
 } else {
     url = config.apiUrl.grebrov
@@ -17,6 +20,7 @@ export default createStore({
     modules: {
         pages,
         es,
+        teams,
     },
 
     state () {
