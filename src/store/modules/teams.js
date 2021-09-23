@@ -53,8 +53,6 @@ export default {
 
                 const countJson = await countRes.json()
 
-                console.log('json: ', json)
-
                 if (res.ok) {
                     ctx.commit('list', json)
                 }
