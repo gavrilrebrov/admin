@@ -3,23 +3,66 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 import Icon from '../../../components/Icon.vue'
 import Card from '../../../components/Card.vue'
+import moment from 'moment/min/moment-with-locales'
 
 const store = useStore()
 
 const isLoading = computed(() => store.state.teams.isLoading)
-const teams = computed(() => store.state.teams.list)
+const teams = computed(() => {
+    let list = store.state.teams.list
+
+    let output = []
+
+    for (let i in list) {
+        let parts = list[i].participants.map(i => {
+            let role
+
+            if (i.role === 'manager') role = 1
+            if (i.role === 'producer') role = 2
+            if (i.role === 'designer') role = 3
+            if (i.role === 'developer') role = 4
+
+            return {
+                role,
+                name: i.name,
+                phone: i.phone,
+                email: i.email,
+                jobPlace: i.jobPlace,
+                jobPosition: i.jobPosition,
+            }
+        })
+
+        parts = parts.sort(function (a, b) {
+            if (a.role > b.role) {
+                return 1; }
+            if (a.role < b.role) {
+                return -1; }
+            return 0;
+        })
+
+        output.push({
+            name: list[i].name,
+            participants: parts,
+            created_at: list[i].created_at,
+        })
+    }
+
+    return output
+})
 
 const getRoleName = (roleName) => {
-    if (roleName === 'manager') {
+    if (roleName === 1) {
         return 'Менеджер (Team-lead)'
-    } else if (roleName === 'designer') {
+    } else if (roleName === 3) {
         return 'Дизайнер'
-    } else if (roleName === 'developer') {
+    } else if (roleName === 4) {
         return 'Разработчик'
-    } else if (roleName === 'producer') {
+    } else if (roleName === 2) {
         return 'Методист/Продюсер'
     }
 }
+
+moment.locale('ru')
 </script>
 
 <template>
@@ -39,13 +82,28 @@ const getRoleName = (roleName) => {
             :key="team.id"
         >
             <template #header>
-                <div class="flex items-center gap-x-2 text-lg">
-                    <div class="text-gray-400 font-medium">Название курса:</div>
-                    <div
-                        class="
-                            font-semibold
-                        "
-                    >{{ team.name }}</div>
+                <div class="flex items-center justify-between w-full">
+                    <div>
+                        <div class="text-gray-500
+                                font-medium
+                                text-sm
+                            "
+                        >Название курса:</div>
+                        <div
+                            class="
+                                font-semibold
+                            "
+                        >{{ team.name }}</div>
+                    </div>
+
+                    <div class="text-right">
+                        <span class="text-sm
+                                text-gray-500
+                                font-medium
+                            "
+                        >Дата регистрации:</span>
+                        <div>{{ moment(team.created_at).format('LLL') }}</div>
+                    </div>
                 </div>
             </template>
 
@@ -63,10 +121,6 @@ const getRoleName = (roleName) => {
                         gap-y-3
                     "
                 >
-                    <div class="font-semibold">
-                        {{ participant.name }}
-                    </div>
-
                     <div>
                         <div class="
                                 text-xs
@@ -77,14 +131,18 @@ const getRoleName = (roleName) => {
                                 rounded
                             "
                             :class="{
-                                'text-red-500 bg-red-200': participant.role === 'manager',
-                                'text-yellow-500 bg-yellow-200': participant.role === 'designer',
-                                'text-indigo-500 bg-indigo-200': participant.role === 'developer',
-                                'text-green-500 bg-green-200': participant.role === 'producer',
+                                'text-red-500 bg-red-200': participant.role === 1,
+                                'text-yellow-500 bg-yellow-200': participant.role === 3,
+                                'text-indigo-500 bg-indigo-200': participant.role === 4,
+                                'text-green-500 bg-green-200': participant.role === 2,
                             }"
                         >
                             {{ getRoleName(participant.role) }}
                         </div>
+                    </div>
+
+                    <div class="font-semibold">
+                        {{ participant.name }}
                     </div>
 
                     <div class="flex items-center gap-x-2">
