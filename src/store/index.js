@@ -5,6 +5,7 @@ import config from '../config.json'
 import pages from './modules/pages'
 import es from './modules/es'
 import teams from './modules/teams'
+import events from './modules/events'
 
 let url
 
@@ -21,6 +22,7 @@ export default createStore({
         pages,
         es,
         teams,
+        events,
     },
 
     state () {

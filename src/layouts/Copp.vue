@@ -23,6 +23,11 @@ onMounted(async () => {
             await store.dispatch('teams/getList')
             router.push('/teams')
         }
+    } else if (user.value.role.name === 'events') {
+        if (route.name !== 'events-item') {
+            await store.dispatch('events/getList')
+            router.push('/events')
+        }
     }
 })
 
@@ -33,6 +38,8 @@ const title = computed(() => {
         return 'Содействие занятости'
     } else if (user.value.role.name === 'teams') {
         return 'PROопережение'
+    } else if (user.value.role.name === 'events') {
+        return 'Мероприятия ЦОПП'
     }
 })
 </script>

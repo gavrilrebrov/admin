@@ -4,12 +4,6 @@ import Icon from '../../../components/Icon.vue'
 import Field from '../../../components/form/Field.vue'
 import { watch, computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-} from '@headlessui/vue'
 
 const store = useStore()
 
