@@ -4,6 +4,7 @@ import EventsItem from '../../modules/copp/events/Item.vue'
 import EventsEdit from '../../modules/copp/events/Edit.vue'
 import EventsSchedule from '../../modules/copp/events/Schedule.vue'
 import EventsParticipants from '../../modules/copp/events/Participants.vue'
+import ScheduleList from '../../modules/copp/events/schedule/List.vue'
 
 export default {
     path: '/events',
@@ -26,7 +27,13 @@ export default {
                 {
                     path: 'schedule',
                     component: EventsSchedule,
-                    name: 'events-schedule'
+                    children: [
+                        {
+                            path: '',
+                            component: ScheduleList,
+                            name: 'events-schedule-list'
+                        }
+                    ]
                 },
                 {
                     path: 'participants',

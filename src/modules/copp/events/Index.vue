@@ -96,7 +96,7 @@ const back = () => {
                         text-gray-500
                     "
                     :class="{
-                        'text-blue-500 bg-blue-100': route.name === 'events-schedule'
+                        'text-blue-500 bg-blue-100': route.name === 'events-schedule-list'
                     }"
                 >
                     Программа
@@ -117,6 +117,18 @@ const back = () => {
                     }"
                 >
                     Участники
+                </router-link>
+
+                <router-link
+                    :to="`/events/${route.params.eventId}/categories`"
+                    class="
+                        py-2 px-3
+                        text-sm rounded
+                        font-semibold
+                        text-gray-500
+                    "
+                >
+                    Категории
                 </router-link>
             </div>
         </div>
