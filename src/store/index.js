@@ -12,7 +12,7 @@ let url
 if (window.location.hostname === 'admin.copp14.ru') {
     url = config.apiUrl.copp
 } else if (window.location.hostname === 'localhost') {
-    url = config.apiUrl.copp
+    url = config.apiUrl.grebrov
 } else {
     url = config.apiUrl.grebrov
 }
