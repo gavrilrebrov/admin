@@ -19,6 +19,9 @@ export default {
 
             schedules: [],
             schedulesCount: 0,
+
+            categories: [],
+            categoriesCount: 0,
         }
     },
 
@@ -78,8 +81,6 @@ export default {
                 }
             }
 
-            console.log('output: ', output)
-
             return output
         }
     },
@@ -107,6 +108,14 @@ export default {
 
         schedulesCount (state, value) {
             state.schedulesCount = value
+        },
+
+        categories (state, value) {
+            state.categories = value
+        },
+
+        categoriesCount (state, value) {
+            state.categoriesCount = value
         }
     },
 
@@ -240,10 +249,48 @@ export default {
                 const json = await res.json()
                 const countJson = await countRes.json()
 
-                console.log('json: ', json)
-
                 if (res.ok) ctx.commit('schedules', json)
                 if (countRes.ok) ctx.commit('schedulesCount', countJson)
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('isLoading', false)
+        },
+
+        async getCategories (ctx) {
+            ctx.commit('isLoading', true)
+
+            let query = {
+                event: ctx.state.item.id,
+                _limit: -1
+            }
+
+            query = qs.stringify(query)
+
+            try {
+                const res = await fetch(`${url}/categories?${query}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const countRes = await fetch(`${url}/categories/count?${query}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const json = await res.json()
+                const countJson = await countRes.json()
+
+                console.log('json: ', json)
+                console.log('countJson: ', countJson)
+
+                if (res.ok) ctx.commit('categories', json)
+                if (countRes.ok) ctx.commit('categoriesCount', countJson)
             } catch (err) {
                 console.error('err: ', err)
             }

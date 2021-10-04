@@ -127,6 +127,9 @@ const back = () => {
                         font-semibold
                         text-gray-500
                     "
+                    :class="{
+                        'text-blue-500 bg-blue-100': route.name === 'events-categories'
+                    }"
                 >
                     Категории
                 </router-link>
