@@ -34,8 +34,14 @@ export default {
         async getList (ctx) {
             ctx.commit('isLoading', true)
 
+            let query = {
+                _sort: 'identifier:ASC'
+            }
+
+            query = qs.stringify(query)
+
             try {
-                const res = await fetch(`${url}/teams`, {
+                const res = await fetch(`${url}/teams?${query}`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + VueCookies.get('token')
@@ -55,6 +61,7 @@ export default {
 
                 if (res.ok) {
                     ctx.commit('list', json)
+                    console.log('json: ', json)
                 }
 
                 if (countRes.ok) {

@@ -29,6 +29,7 @@ const teams = computed(() => {
                 email: i.email,
                 jobPlace: i.jobPlace,
                 jobPosition: i.jobPosition,
+                identifier: i.identifier,
             }
         })
 
@@ -43,6 +44,7 @@ const teams = computed(() => {
         output.push({
             name: list[i].name,
             participants: parts,
+            identifier: list[i].identifier,
             created_at: list[i].created_at,
         })
     }
@@ -83,7 +85,17 @@ moment.locale('ru')
         >
             <template #header>
                 <div class="flex items-center justify-between w-full">
-                    <div>
+                    <div class="
+                            flex-shrink-0
+                            pr-5
+                            font-semibold
+                            text-2xl
+                            text-gray-300
+                        "
+                    >
+                        #<span class="text-blue-500">{{ team.identifier }}</span>
+                    </div>
+                    <div class="flex-grow">
                         <div class="text-gray-500
                                 font-medium
                                 text-sm
@@ -121,7 +133,15 @@ moment.locale('ru')
                         gap-y-3
                     "
                 >
-                    <div>
+                    <div class="inline-flex gap-x-2">
+                        <div class="font-semibold text-xs
+                                rounded bg-gray-200
+                                py-1 px-2
+                                text-gray-500
+                            "
+                        >
+                            #{{ participant.identifier }}
+                        </div>
                         <div class="
                                 text-xs
                                 font-semibold
