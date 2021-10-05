@@ -42,10 +42,15 @@ const teams = computed(() => {
         })
 
         output.push({
-            name: list[i].name,
+            name: list[i].name ? list[i].name : '-',
             participants: parts,
             identifier: list[i].identifier,
             created_at: list[i].created_at,
+            courseName: list[i].courseName,
+            homework1: list[i].homework1,
+            homework2: list[i].homework2,
+            homework3: list[i].homework3,
+            organization: parts[0].jobPlace,
         })
     }
 
@@ -84,109 +89,182 @@ moment.locale('ru')
             :key="team.id"
         >
             <template #header>
-                <div class="flex items-center justify-between w-full">
+                <div class="flex items-center py-5 w-full -m-5">
                     <div class="
                             flex-shrink-0
-                            pr-5
+                            w-24
                             font-semibold
                             text-2xl
                             text-gray-300
+                            pl-5
                         "
                     >
                         #<span class="text-blue-500">{{ team.identifier }}</span>
                     </div>
-                    <div class="flex-grow">
-                        <div class="text-gray-500
-                                font-medium
-                                text-sm
-                            "
-                        >Название курса:</div>
+
+                    <div class="flex-grow flex flex-col gap-y-1">
                         <div
                             class="
                                 font-semibold
+                                flex items-center gap-x-3
                             "
-                        >{{ team.name }}</div>
+                        >
+                            <div>{{ team.name }}</div>
+                            <div class="font-semibold text-gray-500 text-sm">Курс: {{ team.courseName }}</div>
+                        </div>
+
+                        <div class="text-gray-400
+                                font-medium
+                                text-sm
+                            "
+                        >{{ team.organization }}</div>
                     </div>
 
-                    <div class="text-right">
+                    <div class="
+                            flex-shrink-0
+                            flex
+                            gap-x-2
+                            text-sm"
+                    >
+                        <div class="
+                            font-semibold
+                            px-2 py-1
+                            text-xs
+                            flex items-center justify-center
+                            rounded
+                        "
+                            :class="{
+                                'bg-blue-100 text-blue-500': team.homework1,
+                                'bg-gray-100 text-gray-500': !team.homework1,
+                            }"
+                            :title="team.homework1 ? 'Работа загружена' : 'Работа не загружена'"
+                        >
+                            <a :href="`https://api.copp14.ru${team.homework1.url}`" target="_blank" v-if="team.homework1" >ДЗ-1</a>
+
+                            <span v-if="!team.homework1">ДЗ-1</span>
+                        </div>
+
+                        <div class="
+                            font-semibold
+                            px-2 py-1
+                            text-xs
+                            flex items-center justify-center
+                            rounded
+                        "
+                            :class="{
+                                'bg-blue-100 text-blue-500': team.homework2,
+                                'bg-gray-100 text-gray-500': !team.homework2,
+                            }"
+                            :title="team.homework2 ? 'Работа загружена' : 'Работа не загружена'"
+                        >
+                            <a :href="`https://api.copp14.ru${team.homework2.url}`" target="_blank" v-if="team.homework2" >ДЗ-2</a>
+
+                            <span v-if="!team.homework2">ДЗ-2</span>
+                        </div>
+
+                        <div class="
+                            font-semibold
+                            px-2 py-1
+                            text-xs
+                            flex items-center justify-center
+                            rounded
+                        "
+                            :class="{
+                                'bg-blue-100 text-blue-500': team.homework3,
+                                'bg-gray-100 text-gray-500': !team.homework3,
+                            }"
+                            :title="team.homework3 ? 'Работа загружена' : 'Работа не загружена'"
+                        >
+                            <a :href="`https://api.copp14.ru${team.homework3.url}`" target="_blank" v-if="team.homework3" >ДЗ-3</a>
+
+                            <span v-if="!team.homework3">ДЗ-3</span>
+                        </div>
+                    </div>
+
+                    <!-- <div class="w-36 flex-shrink-0">
                         <span class="text-sm
                                 text-gray-500
                                 font-medium
                             "
                         >Дата регистрации:</span>
-                        <div>{{ moment(team.created_at).format('LLL') }}</div>
-                    </div>
+                        <div class="text-sm font-medium">{{ moment(team.created_at).format('DD.MM.YYYY HH:mm') }}</div>
+                    </div> -->
                 </div>
             </template>
 
-
-            <div class="
-                    grid grid-cols-4
-                    gap-x-5
-                "
-            >
-                <div
+            <div class="flex flex-col divide-y divide-gray-200 -m-5">
+                <div class="
+                        flex
+                        text-sm
+                        items-center
+                        py-3
+                    "
                     v-for="participant in team.participants"
                     :key="participant.id"
-                    class="
-                        flex flex-col
-                        gap-y-3
-                    "
                 >
-                    <div class="inline-flex gap-x-2">
-                        <div class="font-semibold text-xs
-                                rounded bg-gray-200
-                                py-1 px-2
-                                text-gray-500
-                            "
-                        >
-                            #{{ participant.identifier }}
+                    <div class="
+                            flex-shrink-0
+                            w-24
+                            text-gray-300
+                            font-semibold
+                            text-lg
+                            pl-5
+                        "
+                    >
+                        #{{ participant.identifier }}
+                    </div>
+
+                    <div class="
+                            flex-grow
+                        "
+                    >
+                        <div class="font-medium">
+                            {{ participant.name }}
                         </div>
+
+                        <div class="text-gray-500">
+                            {{ participant.jobPosition }}
+                        </div>
+                    </div>
+
+                    <div class="
+                            w-72 flex-shrink-0
+                            flex flex-col
+                            gap-y-1
+                            text-sm
+                        "
+                    >
+                        <div class="flex items-center gap-x-2">
+                            <Icon icon="phone" class="w-4 h-4 text-blue-500" />
+                            <a :href="`tel:+7${participant.phone}`">{{ participant.phone }}</a>
+                        </div>
+                        <div class="flex items-center gap-x-2">
+                            <Icon icon="at-symbol" class="w-4 h-4 text-blue-500" />
+                            <a :href="`mailto:${participant.email}`">{{ participant.email }}</a>
+                        </div>
+                    </div>
+
+                    <div class="
+                            w-48 flex-shrink-0
+                        "
+                    >
                         <div class="
                                 text-xs
                                 font-semibold
                                 text-white
                                 inline-block
-                                py-1 px-2
-                                rounded
+                                rounded-sm
                             "
                             :class="{
-                                'text-red-500 bg-red-200': participant.role === 1,
-                                'text-yellow-500 bg-yellow-200': participant.role === 3,
-                                'text-indigo-500 bg-indigo-200': participant.role === 4,
-                                'text-green-500 bg-green-200': participant.role === 2,
+                                'text-red-500 bg-red-100': participant.role === 1,
+                                'text-yellow-500 bg-yellow-100': participant.role === 3,
+                                'text-indigo-500 bg-indigo-100': participant.role === 4,
+                                'text-green-500 bg-green-100': participant.role === 2,
                             }"
+                            style="padding:2px 5px"
                         >
                             {{ getRoleName(participant.role) }}
                         </div>
-                    </div>
-
-                    <div class="font-semibold">
-                        {{ participant.name }}
-                    </div>
-
-                    <div class="flex items-center gap-x-2">
-                        <Icon icon="phone" class="w-4 h-4 text-blue-500" />
-                        <a :href="`tel:+7${participant.phone}`">{{ participant.phone }}</a>
-                    </div>
-
-                    <div class="flex items-center gap-x-2">
-                        <Icon icon="at-symbol" class="w-4 h-4 text-blue-500" />
-                        <a :href="`mailto:${participant.email}`">{{ participant.email }}</a>
-                    </div>
-
-                    <div>
-                        <div class="text-sm text-gray-400">
-                            Место работы:
-                        </div>
-                        {{ participant.jobPlace }}
-                    </div>
-
-                    <div>
-                        <div class="text-sm text-gray-400">
-                            Должность:
-                        </div>
-                        {{ participant.jobPosition }}
                     </div>
                 </div>
             </div>
