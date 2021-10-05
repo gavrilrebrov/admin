@@ -18,7 +18,8 @@ const isCopp = computed(() => {
         (
             user.value.role.name === 'employment-support' ||
             user.value.role.name === 'teams' ||
-            user.value.role.name === 'events'
+            user.value.role.name === 'events' ||
+            user.value.role.name === 'proo-expert'
         )
     )
 })

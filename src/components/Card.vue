@@ -1,8 +1,12 @@
 <script setup>
 import Icon from './Icon.vue'
-import { useSlots } from 'vue'
+import { useSlots, onMounted } from 'vue'
 
 const slots = useSlots()
+
+onMounted(() => {
+    console.log('slots: ', slots.default)
+})
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const slots = useSlots()
         <slot name="header" />
     </div>
 
-    <div class="p-5">
+    <div class="p-5" v-if="slots.default">
         <slot />
     </div>
 

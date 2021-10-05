@@ -2,6 +2,7 @@
 import moment from 'moment-timezone'
 import Icon from './Icon.vue'
 import { defineEmits, defineProps } from 'vue'
+import Input from './form/Input.vue'
 
 const props = defineProps(['columns', 'data', 'edit', 'show'])
 
@@ -136,6 +137,25 @@ const onDownload = (e, id) => {
                             <button title="Скачать" @click="e => onDownload(e, item.id)">
                                 <Icon icon="download" class="w-6 text-blue-500" />
                             </button>
+                        </div>
+
+                        <div v-if="col.type === 'file'">
+                            <a :href="item[col.key].url" download
+                                v-if="item[col.key]"
+                                class="bg-blue-200 inline-block
+                                    py-1 px-2
+                                    text-xs
+                                    font-medium
+                                    text-blue-500
+                                    rounded
+                                "
+                            >{{ item[col.key].name }}</a>
+
+                            <span v-if="!item[col.key]">-</span>
+                        </div>
+
+                        <div v-if="col.type === 'field'">
+                            <Input v-model="item[col.key]" />
                         </div>
                     </td>
 

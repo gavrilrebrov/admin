@@ -18,7 +18,10 @@ onMounted(async () => {
             await store.dispatch('es/getList')
             router.push('/es')
         }
-    } else if (user.value.role.name === 'teams') {
+    } else if (
+        user.value.role.name === 'teams' ||
+        user.value.role.name === 'proo-expert'
+    ) {
         if (route.name !== 'teams-item') {
             await store.dispatch('teams/getList')
             router.push('/teams')
@@ -36,7 +39,10 @@ const logout = () => store.dispatch('logout')
 const title = computed(() => {
     if (user.value.role.name === 'employment-support') {
         return 'Содействие занятости'
-    } else if (user.value.role.name === 'teams') {
+    } else if (
+        user.value.role.name === 'teams' ||
+        user.value.role.name === 'proo-expert'
+    ) {
         return 'PROопережение'
     } else if (user.value.role.name === 'events') {
         return 'Мероприятия ЦОПП'

@@ -4,10 +4,12 @@ import { computed } from 'vue'
 import Icon from '../../../components/Icon.vue'
 import Card from '../../../components/Card.vue'
 import moment from 'moment/min/moment-with-locales'
+import Table from '../../../components/Table.vue'
 
 const store = useStore()
 
 const isLoading = computed(() => store.state.teams.isLoading)
+const user = computed(() => store.state.user)
 const teams = computed(() => {
     let list = store.state.teams.list
 
@@ -51,6 +53,9 @@ const teams = computed(() => {
             homework2: list[i].homework2,
             homework3: list[i].homework3,
             organization: parts[0].jobPlace,
+            id: list[i].id,
+            description: parts[0].jobPlace,
+            grades: ''
         })
     }
 
@@ -69,6 +74,16 @@ const getRoleName = (roleName) => {
     }
 }
 
+const columns = [
+    { label: '#', key: 'identifier' },
+    { label: 'Команда', key: 'name', type: 'description' },
+    { label: 'Курс', key: 'courseName' },
+    { label: 'ДЗ-1', key: 'homework1', type: 'file' },
+    { label: 'ДЗ-2', key: 'homework2', type: 'file' },
+    { label: 'ДЗ-3', key: 'homework3', type: 'file' },
+    { label: 'Баллы', key: 'grades', type: 'field' },
+]
+
 moment.locale('ru')
 </script>
 
@@ -83,7 +98,11 @@ moment.locale('ru')
         <Icon icon="loader" class="w-16 h-16 text-blue-500 animate-spin" />
     </div>
 
-    <div class="flex flex-col gap-y-5">
+    <div v-if="user.role.name === 'proo-expert'">
+        <Table :columns="columns" :data="teams" />
+    </div>
+
+    <div class="flex flex-col gap-y-5" v-if="user.role.name === 'teams'">
         <Card
             v-for="team in teams"
             :key="team.id"
@@ -180,15 +199,6 @@ moment.locale('ru')
                             <span v-if="!team.homework3">ДЗ-3</span>
                         </div>
                     </div>
-
-                    <!-- <div class="w-36 flex-shrink-0">
-                        <span class="text-sm
-                                text-gray-500
-                                font-medium
-                            "
-                        >Дата регистрации:</span>
-                        <div class="text-sm font-medium">{{ moment(team.created_at).format('DD.MM.YYYY HH:mm') }}</div>
-                    </div> -->
                 </div>
             </template>
 
