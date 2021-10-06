@@ -2,11 +2,15 @@
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import Notice from '../../../components/Notice.vue'
 
 const route = useRoute()
 const store = useStore()
 
 const count = computed(() => store.state.teams.count)
+const user = computed(() => store.state.user)
+const notice = computed(() => store.state.notice)
+const isLoading = computed(() => store.state.teams.isLoading)
 </script>
 
 <template>
@@ -42,7 +46,36 @@ const count = computed(() => store.state.teams.count)
             >
                 Найдено записей: {{ count }}
             </div>
+
+            <div v-if="user.role.name === 'proo-expert' && !isLoading">
+                <label class="
+                        text-sm
+                        font-semibold
+                        bg-blue-500
+                        py-2 px-4
+                        text-white
+                        rounded-md
+                        inline-flex
+                        items-center
+                        gap-x-2
+                        hover:bg-blue-600
+                        duration-200
+                        cursor-pointer
+                    "
+                    for="saveGrades"
+                >
+                    Сохранить
+                </label>
+            </div>
         </div>
+    </div>
+
+    <div v-if="notice" class="
+        container mx-auto
+        max-w-screen-xl
+        mt-5
+    ">
+        <Notice :notice="notice" />
     </div>
 
     <div class="p-6">

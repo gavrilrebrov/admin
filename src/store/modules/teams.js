@@ -12,7 +12,9 @@ export default {
         return {
             list: [],
             isLoading: false,
-            count: 0
+            count: 0,
+
+            grades: [],
         }
     },
 
@@ -27,7 +29,11 @@ export default {
 
         isLoading (state, value) {
             state.isLoading = value
-        }
+        },
+
+        grades (state, value) {
+            state.grades = value
+        },
     },
 
     actions: {
@@ -72,6 +78,113 @@ export default {
             }
 
             ctx.commit('isLoading', false)
-        }
+        },
+
+        async saveGrades (ctx, data) {
+            ctx.commit('isLoading', true)
+
+            console.log('user: ', ctx.rootState.user)
+
+            try {
+                let errors = 0
+
+                for (let i in data) {
+                    let team = data[i]
+
+                    let query = {
+                        team: team.id,
+                        expert: ctx.rootState.user.id
+                    }
+
+                    query = qs.stringify(query)
+
+                    const res = await fetch(`${url}/grades?${query}`, {
+                        method: 'get',
+                        headers: {
+                            Authorization: 'Bearer ' + VueCookies.get('token')
+                        }
+                    })
+
+                    const json = await res.json()
+                    if (res.ok) {
+                        const obj = {
+                            value: +(team.grade),
+                            expert: ctx.rootState.user.id,
+                            team: team.id
+                        }
+
+                        const formData = new FormData()
+                        formData.append('data', JSON.stringify(obj))
+
+                        if (json.length === 0) {
+                            const createRes = await fetch(`${url}/grades`, {
+                                method: 'post',
+                                body: formData,
+                                headers: {
+                                    Authorization: 'Bearer ' + VueCookies.get('token')
+                                }
+                            })
+
+                            if (!createRes.ok) {
+                                errors++
+                            }
+                        } else {
+                            const updateRes = await fetch(`${url}/grades/${json[0].id}`, {
+                                method: 'put',
+                                body: formData,
+                                headers: {
+                                    Authorization: 'Bearer ' + VueCookies.get('token')
+                                }
+                            })
+
+                            if (!updateRes.ok) {
+                                errors++
+                            }
+                        }
+                    }
+                }
+
+                if (errors === 0) {
+                    ctx.commit('notice', {
+                        type: 'success',
+                        text: 'Оценки сохранены'
+                    }, { root: true })
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('isLoading', false)
+            console.log('data: ', data)
+        },
+
+        // async getGrades (ctx) {
+        //     ctx.commit('isLoading', true)
+
+        //     try {
+        //         let query = {
+        //             expert: ctx.rootState.user.id
+        //         }
+
+        //         query = qs.stringify(query)
+
+        //         const res = await fetch(`${url}/grades?${query}`, {
+        //             method: 'get',
+        //             headers: {
+        //                 Authorization: 'Bearer ' + VueCookies.get('token')
+        //             }
+        //         })
+
+        //         const json = res.json()
+
+        //         if (res.ok) {
+        //             console.log('json: ', json)
+        //         }
+        //     } catch (err) {
+        //         console.error('err: ', err)
+        //     }
+
+        //     ctx.commit('isLoading', false)
+        // }
     }
 }

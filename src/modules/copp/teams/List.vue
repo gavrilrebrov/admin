@@ -10,6 +10,7 @@ const store = useStore()
 
 const isLoading = computed(() => store.state.teams.isLoading)
 const user = computed(() => store.state.user)
+
 const teams = computed(() => {
     let list = store.state.teams.list
 
@@ -43,6 +44,8 @@ const teams = computed(() => {
             return 0;
         })
 
+        let grade = list[i].grades.find(g => g.expert === user.value.id)
+
         output.push({
             name: list[i].name ? list[i].name : '-',
             participants: parts,
@@ -55,7 +58,7 @@ const teams = computed(() => {
             organization: parts[0].jobPlace,
             id: list[i].id,
             description: parts[0].jobPlace,
-            grades: ''
+            grade: grade ? grade.value : 0
         })
     }
 
@@ -81,8 +84,13 @@ const columns = [
     { label: 'ДЗ-1', key: 'homework1', type: 'file' },
     { label: 'ДЗ-2', key: 'homework2', type: 'file' },
     { label: 'ДЗ-3', key: 'homework3', type: 'file' },
-    { label: 'Баллы', key: 'grades', type: 'field' },
+    { label: 'Баллы', key: 'grade', type: 'input-number' },
 ]
+
+const save = () => {
+    store.commit('notice', null)
+    store.dispatch('teams/saveGrades', teams.value)
+}
 
 moment.locale('ru')
 </script>
@@ -99,7 +107,8 @@ moment.locale('ru')
     </div>
 
     <div v-if="user.role.name === 'proo-expert'">
-        <Table :columns="columns" :data="teams" />
+        <button id="saveGrades" @click="save" class="hidden"></button>
+        <Table :columns="columns" :data="teams" v-if="!isLoading"/>
     </div>
 
     <div class="flex flex-col gap-y-5" v-if="user.role.name === 'teams'">

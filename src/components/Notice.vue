@@ -12,11 +12,17 @@ const notice = computed(() => store.state.notice)
     gap-x-3
 "
     :class="{
-        'bg-red-100': notice.type === 'error',
-        'text-red-500': notice.type === 'error',
+        'bg-red-100 text-red-500': notice.type === 'error',
+        'bg-green-100 text-green-500': notice.type === 'success',
         }"
 >
     <Icon icon="exclamation-circle" v-if="notice.type === 'error'"
+        class="w-6"
+    />
+
+    <Icon
+        icon="check-circle"
+        v-if="notice.type === 'success'"
         class="w-6"
     />
 

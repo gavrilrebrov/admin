@@ -1,7 +1,7 @@
 <script setup>
 import moment from 'moment-timezone'
 import Icon from './Icon.vue'
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits, defineProps, watch } from 'vue'
 import Input from './form/Input.vue'
 
 const props = defineProps(['columns', 'data', 'edit', 'show'])
@@ -154,8 +154,8 @@ const onDownload = (e, id) => {
                             <span v-if="!item[col.key]">-</span>
                         </div>
 
-                        <div v-if="col.type === 'field'">
-                            <Input v-model="item[col.key]" />
+                        <div v-if="col.type === 'input-number'">
+                            <Input v-model="item[col.key]" type="number" />
                         </div>
                     </td>
 
