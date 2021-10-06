@@ -47,6 +47,47 @@ const isLoading = computed(() => store.state.teams.isLoading)
                 Найдено записей: {{ count }}
             </div>
 
+            <div v-if="user.role.name === 'teams'"
+                class="
+                    inline-flex
+                    gap-x-2
+                "
+            >
+                <router-link
+                    :to="`/teams`"
+                    class="
+                        py-2
+                        px-3
+                        text-sm
+                        rounded
+                        font-semibold
+                        text-gray-500
+                    "
+                    :class="{
+                        'text-blue-500 bg-blue-100': route.name === 'teams-list'
+                    }"
+                >
+                    Команды
+                </router-link>
+
+                <router-link
+                    :to="`/teams/grades`"
+                    class="
+                        py-2
+                        px-3
+                        text-sm
+                        rounded
+                        font-semibold
+                        text-gray-500
+                    "
+                    :class="{
+                        'text-blue-500 bg-blue-100': route.name === 'teams-grades'
+                    }"
+                >
+                    Оценки
+                </router-link>
+            </div>
+
             <div v-if="user.role.name === 'proo-expert' && !isLoading">
                 <label class="
                         text-sm
