@@ -141,7 +141,7 @@ const onDownload = (e, id) => {
 
                         <div v-if="col.type === 'file'">
                             <a :href="`https://api.copp14.ru${item[col.key].url}`"
-                                target="_blank"
+                                download
                                 v-if="item[col.key]"
                                 class="bg-blue-200 inline-block
                                     py-1 px-2
