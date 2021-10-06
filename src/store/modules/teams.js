@@ -67,7 +67,6 @@ export default {
 
                 if (res.ok) {
                     ctx.commit('list', json)
-                    console.log('json: ', json)
                 }
 
                 if (countRes.ok) {
@@ -82,8 +81,6 @@ export default {
 
         async saveGrades (ctx, data) {
             ctx.commit('isLoading', true)
-
-            console.log('user: ', ctx.rootState.user)
 
             try {
                 let errors = 0
@@ -155,36 +152,6 @@ export default {
             }
 
             ctx.commit('isLoading', false)
-            console.log('data: ', data)
         },
-
-        // async getGrades (ctx) {
-        //     ctx.commit('isLoading', true)
-
-        //     try {
-        //         let query = {
-        //             expert: ctx.rootState.user.id
-        //         }
-
-        //         query = qs.stringify(query)
-
-        //         const res = await fetch(`${url}/grades?${query}`, {
-        //             method: 'get',
-        //             headers: {
-        //                 Authorization: 'Bearer ' + VueCookies.get('token')
-        //             }
-        //         })
-
-        //         const json = res.json()
-
-        //         if (res.ok) {
-        //             console.log('json: ', json)
-        //         }
-        //     } catch (err) {
-        //         console.error('err: ', err)
-        //     }
-
-        //     ctx.commit('isLoading', false)
-        // }
     }
 }
