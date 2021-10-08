@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import Notice from '../../../components/Notice.vue'
+import Icon from '../../../components/Icon.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -34,6 +35,10 @@ const isLoading = computed(() => store.state.teams.isLoading)
             >
                 <div v-if="route.name === 'teams-list'">
                     Команды
+                </div>
+
+                <div v-if="route.name === 'teams-grades'">
+                    Оценки
                 </div>
             </div>
 
@@ -88,7 +93,31 @@ const isLoading = computed(() => store.state.teams.isLoading)
                 </router-link>
             </div>
 
-            <div v-if="user.role.name === 'proo-expert' && !isLoading">
+            <div v-if="user.role.name === 'proo-expert' && !isLoading"
+                class="
+                    inline-flex items-center gap-x-5
+                "
+            >
+                <a href="/grading.xlsx" class="
+                        bg-green-500
+                        inline-flex
+                        cursor-pointer
+                        gap-x-2
+                        text-white
+                        px-3 py-2
+                        rounded
+                        text-sm
+                        shadow
+                        font-medium
+                        hover:shadow-lg
+                        duration-200
+                    "
+                    download
+                >
+                    <Icon icon="excel" class="w-5" />
+                    <div>Скачать оценочный лист</div>
+                </a>
+
                 <label class="
                         text-sm
                         font-semibold
@@ -102,6 +131,8 @@ const isLoading = computed(() => store.state.teams.isLoading)
                         hover:bg-blue-600
                         duration-200
                         cursor-pointer
+                        shadow
+                        hover:shadow-lg
                     "
                     for="saveGrades"
                 >

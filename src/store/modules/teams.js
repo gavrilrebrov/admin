@@ -15,6 +15,7 @@ export default {
             count: 0,
 
             grades: [],
+            experts: []
         }
     },
 
@@ -34,6 +35,10 @@ export default {
         grades (state, value) {
             state.grades = value
         },
+
+        experts (state, value) {
+            state.experts = value
+        }
     },
 
     actions: {
@@ -153,5 +158,34 @@ export default {
 
             ctx.commit('isLoading', false)
         },
+
+        async getExperts (ctx) {
+            ctx.commit('isLoading', true)
+
+            try {
+                let query = {
+                    role: 7,
+                }
+
+                query = qs.stringify(query)
+
+                const res = await fetch(`${url}/users?${query}`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const json = await res.json()
+
+                if (res.ok) {
+                    console.log('json: ', json)
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('isLoading', false)
+        }
     }
 }
