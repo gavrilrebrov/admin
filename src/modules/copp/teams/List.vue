@@ -107,8 +107,9 @@ moment.locale('ru')
     </div>
 
     <div v-if="user.role.name === 'proo-expert'">
-        <button id="saveGrades" @click="save" class="hidden"></button>
-        <Table :columns="columns" :data="teams" v-if="!isLoading"/>
+        <!-- <button id="saveGrades" @click="save" class="hidden"></button>
+        <Table :columns="columns" :data="teams" v-if="!isLoading"/> -->
+        Оценивание закрыто
     </div>
 
     <div class="flex flex-col gap-y-5" v-if="user.role.name === 'teams'">

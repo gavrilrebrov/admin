@@ -1,6 +1,6 @@
 <script setup>
 import { useStore } from 'vuex'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Icon from '../../../components/Icon.vue'
 
 const store = useStore()
@@ -37,7 +37,8 @@ const teams = computed(() => {
             courseName: _team.courseName,
             organization: _team.participants[0].jobPlace,
             identifier: _team.identifier,
-            grades: _team.grades
+            grades: _team.grades,
+            id: _team.id,
         })
     }
 
@@ -74,7 +75,57 @@ const calcAverage = (team) => {
 
     if (sum > 0) val = sum / team.grades.length
 
-    return val
+    // return Math.round(val)
+    return val.toLocaleString('ru', {
+        style: 'decimal',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+    })
+}
+
+const additionals = ref([])
+
+const addAdditional = (teamId) => {
+    const team = teams.value.find(i => i.id === teamId)
+
+    const addTeam = additionals.value.findIndex(t => t.id === teamId)
+
+    if (addTeam !== -1) {
+        if ((additionals.value[addTeam].value + 0.01) === 0) {
+            additionals.value.splice(addTeam, 1)
+        } else {
+            additionals.value[addTeam].value = additionals.value[addTeam].value + 0.01
+        }
+    } else {
+        additionals.value.push({
+            id: teamId,
+            value: 0.01
+        })
+    }
+}
+
+const dropAdditional = (teamId) => {
+    const team = teams.value.find(i => i.id === teamId)
+
+    const addTeam = additionals.value.findIndex(t => t.id === teamId)
+
+    if (addTeam !== -1) {
+        if ((additionals.value[addTeam].value - 0.01) === 0) {
+            additionals.value.splice(addTeam, 1)
+        } else {
+            additionals.value[addTeam].value = additionals.value[addTeam].value - 0.01
+        }
+    } else {
+        additionals.value.push({
+            id: teamId,
+            value: -0.01
+        })
+    }
+}
+
+const isAdditionals = (teamId) => {
+    let res = additionals.value.find(i => i.id === teamId)
+    return res
 }
 </script>
 
@@ -381,6 +432,18 @@ const calcAverage = (team) => {
                                 p-4
                             "
                         >
+                            Дополнительные баллы
+                        </div>
+                    </th>
+
+                    <th class="border">
+                        <div class="
+                                text-xs
+                                font-medium
+                                text-gray-400
+                                p-4
+                            "
+                        >
                             Итого
                         </div>
                     </th>
@@ -433,6 +496,33 @@ const calcAverage = (team) => {
                             }"
                         >
                             {{ getGradeValue(team, expert) }}
+                        </div>
+                    </td>
+
+                    <td class="px-4 py-3 border">
+                        <div v-if="isAdditionals(team.id)"
+                            class="text-center text-sm mb-3 font-semibold"
+                        >
+                            {{ isAdditionals(team.id).value.toLocaleString('ru', { style: 'decimal' }) }}
+                        </div>
+
+                        <div class="inline-flex text-sm font-semibold rounded overflow-hidden">
+                            <div class="
+                                bg-red-100
+                                text-red-500
+                                py-2 px-3
+                                cursor-pointer
+                            "
+                                @click="dropAdditional(team.id)"
+                            >-0,01</div>
+                            <div class="
+                                bg-green-100
+                                text-green-500
+                                py-2 px-3
+                                cursor-pointer
+                            "
+                                @click="addAdditional(team.id)"
+                            >+0,01</div>
                         </div>
                     </td>
 
