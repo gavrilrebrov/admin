@@ -71,6 +71,7 @@ export default {
                 const countJson = await countRes.json()
 
                 if (res.ok) {
+                    console.log('json: ', json)
                     ctx.commit('list', json)
                 }
 
@@ -179,13 +180,13 @@ export default {
                 const json = await res.json()
 
                 if (res.ok) {
-                    console.log('json: ', json)
+                    ctx.commit('experts', json)
                 }
             } catch (err) {
                 console.error('err: ', err)
             }
 
             ctx.commit('isLoading', false)
-        }
+        },
     }
 }
