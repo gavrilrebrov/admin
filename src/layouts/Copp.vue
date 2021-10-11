@@ -52,7 +52,7 @@ const title = computed(() => {
 
 <template>
 <div class="bg-gray-100 min-h-screen">
-    <div class="bg-gray-800 px-5">
+    <div class="bg-gray-800 px-5 print:hidden">
         <div class="
                 container
                 mx-auto

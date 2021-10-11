@@ -1,6 +1,7 @@
 <script setup>
 import { useStore } from 'vuex'
 import { computed, onMounted } from 'vue'
+import Icon from '../../../components/Icon.vue'
 
 const store = useStore()
 const list = computed(() => {
@@ -24,7 +25,29 @@ const getExpertName = (expertName) => {
 }
 
 const teams = computed(() => {
-    return store.state.teams.list
+    let _teams = store.state.teams.list
+    let output = []
+
+    for (let t in _teams) {
+        let _team = _teams[t]
+
+        output.push({
+            average: calcAverage(_team),
+            name: _team.name,
+            courseName: _team.courseName,
+            organization: _team.participants[0].jobPlace,
+            identifier: _team.identifier,
+            grades: _team.grades
+        })
+    }
+
+    output.sort((a, b) => {
+        if (a.average < b.average) return 1
+        if (a.average > b.average) return -1
+        return 0
+    })
+
+    return output
 })
 
 const getGradeValue = (team, expert) => {
@@ -41,14 +64,15 @@ const getGradeValue = (team, expert) => {
 
 const calcAverage = (team) => {
     let val = 0
+    let sum = 0
 
-    console.log('team: ', team)
+    for (let g in team.grades) {
+        let grade = team.grades[g]
 
-    for (let e in experts.value) {
-        let expert = experts[e]
-
-        console.log('expert: ', expert)
+        sum = sum + grade.value
     }
+
+    if (sum > 0) val = sum / team.grades.length
 
     return val
 }
@@ -56,124 +80,374 @@ const calcAverage = (team) => {
 
 
 <template>
-<div class="
-        bg-white
-        shadow
-        rounded-lg
-    "
->
-    <table>
-        <thead>
-            <tr>
-                <th rowspan="2" class="
-                        p-4
-                        border
-                        text-sm
-                    "
-                >#</th>
-                <th rowspan="2" class="
-                        p-4
-                        border
-                        text-sm
-                    "
-                >Команда</th>
-                <th colspan="9" class="
-                        p-4
-                        border
-                        text-sm
-                    "
-                >Баллы</th>
-            </tr>
+<div>
+    <div class="screen:hidden">
+        <div class="text-center py-5 text-sm">
+            Автономная некоммерческая организация дополнительного профессионального образования
+        </div>
 
-            <tr>
-                <th v-for="expert in experts" :key="expert.id"
-                    class="border"
-                >
-                    <div class="
-                            text-xs
-                            font-medium
-                            text-gray-400
-                            p-4
-                        "
-                    >
-                        {{ getExpertName(expert.name) }}
+        <div class="flex gap-x-8 justify-between text-sm">
+            <img src="/copp-logo.png" alt="copp-logo" class="w-56 flex-shrink-0">
+
+            <div class="flex flex-col gap-y-1">
+                <div class="flex items-center gap-x-2">
+                    <Icon icon="location-marker" class="w-6" />
+
+                    <div>ул. Крупской, 13, г. Якутск, 677000</div>
+                </div>
+
+                <div class="flex items-center gap-x-2">
+                    <Icon icon="phone" class="w-6" />
+
+                    <div>8 (800) 222-41-40</div>
+                </div>
+
+                <div class="flex items-center gap-x-2">
+                    <Icon icon="at-symbol" class="w-6" />
+
+                    <div>
+                        copp14@mail.ru
                     </div>
-                </th>
+                </div>
 
-                <th class="border">
-                    <div class="
-                            text-xs
-                            font-medium
-                            text-gray-400
-                            p-4
-                        "
-                    >
-                        Итого
-                    </div>
-                </th>
-            </tr>
-        </thead>
+                <div>ИНН 1435347747 ОГРН 1191447015605</div>
+            </div>
+        </div>
 
-        <tbody>
-            <tr v-for="team in teams" :key="team.id">
-                <td class="px-4 py-2 border">
-                    <div class="
-                            text-sm
-                            text-gray-400
-                            font-medium
-                        "
-                    >
-                        {{ team.identifier }}
-                    </div>
-                </td>
+        <div class="
+                font-semibold
+                mt-10
+                text-center
+                text-lg
+            "
+        >Итоговый протокол экспертной комиссии по оцениванию проектных работ участников регионального этапа проекта «PROопережение»</div>
 
-                <td class="px-4 py-3 border">
-                    <div class="
-                            text-sm
-                            font-semibold
-                        "
-                    >
+        <table class="text-xs mt-5">
+            <thead>
+                <tr>
+                    <th class="border p-2">
+                        <div>№</div>
+                    </th>
+                    <th class="border">
+                        <div>
+                            Название команды
+                        </div>
+                    </th>
+                    <th class="border p-2">
+                        <div>
+                            Наименование организации
+                        </div>
+                    </th>
+                    <th class="border p-2">
+                        <div>
+                            Название курса
+                        </div>
+                    </th>
+                    <th class="border p-2">
+                        <div>
+                            Итоговый рейтинг (балл)
+                        </div>
+                    </th>
+                    <th class="border p-2">
+                        <div>
+                            Место
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="team, teamIndex in teams" :key="team.id">
+                    <td class="border p-2">
+                        <div>
+                            {{ team.identifier }}
+                        </div>
+                    </td>
+
+                    <td class="border p-2">
                         <div>
                             {{ team.name }}
                         </div>
+                    </td>
 
-                        <div class="
-                            font-normal
-                            text-gray-400
-                        ">
-                            {{ team.participants[0].jobPlace }}
+                    <td class="border p-2">
+                        <div>
+                            {{ team.organization }}
                         </div>
-                    </div>
-                </td>
+                    </td>
 
-                <td v-for="expert in experts" :key="expert.id"
-                    class="
-                        px-4 py-3 border
-                    "
-                >
-                    <div class="
-                            text-sm
-                            font-medium
-                        "
-                        :class="{
-                            'text-gray-300': getGradeValue(team, expert) === 0
-                        }"
-                    >
-                        {{ getGradeValue(team, expert) }}
-                    </div>
-                </td>
+                    <td class="border p-2">
+                        <div>
+                            {{ team.courseName }}
+                        </div>
+                    </td>
 
-                <td class="px-4 py-3 border">
-                    <div class="
+                    <td class="border p-2 text-center">
+                        <div>
+                            {{ calcAverage(team) }}
+                        </div>
+                    </td>
+
+                    <td class="border p-2 text-center">
+                        <div>
+                            {{ teamIndex + 1 }}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="flex flex-col gap-y-5 mt-10 text-sm">
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Председатель
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    М.Ю.Присяжный
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Заместитель председателя
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    В.Г.Хабаров
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Член комиссии
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    Г.А. Антонова-Тен
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Член комиссии
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    Л.М. Иванова
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Член комиссии
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    М.В. Курнева
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Член комиссии
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    А.М. Соловьев
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Член комиссии
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    Н.В. Федотова
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="w-72">
+                    Ответственный секретарь
+                </div>
+
+                <div>
+                    <div class="text-xs mt-6">
+                        (личная подпись)
+                    </div>
+                </div>
+
+                <div class="w-56 text-right">
+                    С.В. Гермогенова
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="
+            bg-white
+            shadow
+            rounded-lg
+            print:hidden
+        "
+    >
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2" class="
+                            p-4
+                            border
                             text-sm
-                            font-medium
+                        "
+                    >№</th>
+                    <th rowspan="2" class="
+                            p-4
+                            border
+                            text-sm
+                        "
+                    >Команда</th>
+                    <th colspan="9" class="
+                            p-4
+                            border
+                            text-sm
+                        "
+                    >Баллы</th>
+                </tr>
+
+                <tr>
+                    <th v-for="expert in experts" :key="expert.id"
+                        class="border"
+                    >
+                        <div class="
+                                text-xs
+                                font-medium
+                                text-gray-400
+                                p-4
+                            "
+                        >
+                            {{ getExpertName(expert.name) }}
+                        </div>
+                    </th>
+
+                    <th class="border">
+                        <div class="
+                                text-xs
+                                font-medium
+                                text-gray-400
+                                p-4
+                            "
+                        >
+                            Итого
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="team in teams" :key="team.id">
+                    <td class="px-4 py-2 border">
+                        <div class="
+                                text-sm
+                                text-gray-400
+                                font-medium
+                            "
+                        >
+                            {{ team.identifier }}
+                        </div>
+                    </td>
+
+                    <td class="px-4 py-3 border">
+                        <div class="
+                                text-sm
+                                font-semibold
+                            "
+                        >
+                            <div>
+                                {{ team.name }}
+                            </div>
+
+                            <div class="
+                                font-normal
+                                text-gray-400
+                            ">
+                                {{ team.organization }}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td v-for="expert in experts" :key="expert.id"
+                        class="
+                            px-4 py-3 border
                         "
                     >
-                        {{ calcAverage(team) }}
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                        <div class="
+                                text-sm
+                                font-medium
+                            "
+                            :class="{
+                                'text-gray-300': getGradeValue(team, expert) === 0
+                            }"
+                        >
+                            {{ getGradeValue(team, expert) }}
+                        </div>
+                    </td>
+
+                    <td class="px-4 py-3 border">
+                        <div class="
+                                text-sm
+                                font-medium
+                            "
+                        >
+                            {{ calcAverage(team) }}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </template>

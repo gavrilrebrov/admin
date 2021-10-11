@@ -27,3 +27,7 @@ body {
 .Pagination .PaginationControl {
     @apply text-blue-500 !important
 }
+
+@media print {
+    @page { margin: 10px }
+}

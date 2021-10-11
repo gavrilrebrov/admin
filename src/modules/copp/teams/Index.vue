@@ -12,11 +12,15 @@ const count = computed(() => store.state.teams.count)
 const user = computed(() => store.state.user)
 const notice = computed(() => store.state.notice)
 const isLoading = computed(() => store.state.teams.isLoading)
+
+const print = () => {
+    if (window.print) window.print()
+}
 </script>
 
 <template>
 <div>
-    <div class="bg-white px-6 shadow sticky top-0 z-30">
+    <div class="bg-white px-6 shadow sticky top-0 z-30 print:hidden">
         <div class="
                 container
                 mx-auto
@@ -52,6 +56,20 @@ const isLoading = computed(() => store.state.teams.isLoading)
                 Найдено записей: {{ count }}
             </div>
 
+            <div v-if="route.name === 'teams-grades'">
+                <button class="
+                        bg-green-500
+                        text-sm
+                        py-2 px-3
+                        text-white
+                        rounded
+                    "
+                    @click="print"
+                >
+                    Распечатать протокол
+                </button>
+            </div>
+
             <div v-if="user.role.name === 'teams'"
                 class="
                     inline-flex
@@ -72,7 +90,7 @@ const isLoading = computed(() => store.state.teams.isLoading)
                         'text-blue-500 bg-blue-100': route.name === 'teams-list'
                     }"
                 >
-                    Команды
+                    Участники
                 </router-link>
 
                 <router-link
@@ -89,7 +107,7 @@ const isLoading = computed(() => store.state.teams.isLoading)
                         'text-blue-500 bg-blue-100': route.name === 'teams-grades'
                     }"
                 >
-                    Оценки
+                    Баллы
                 </router-link>
             </div>
 
