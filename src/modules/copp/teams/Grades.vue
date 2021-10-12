@@ -1,15 +1,19 @@
 <script setup>
 import { useStore } from 'vuex'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, watch, watchEffect, ref } from 'vue'
 import Icon from '../../../components/Icon.vue'
+import Input from '../../../components/form/Input.vue'
 
 const store = useStore()
 const list = computed(() => {
-    return strore.state.teams.list
+    return store.state.teams.list
 })
+
+// let teams = ref([])
 
 onMounted(() => {
     store.dispatch('teams/getExperts')
+    initTeams()
 })
 
 const experts = computed(() => {
@@ -24,32 +28,49 @@ const getExpertName = (expertName) => {
     return `${fio[0]} ${fio[1][0]}. ${fio[2][0]}.`
 }
 
-const teams = computed(() => {
-    let _teams = store.state.teams.list
-    let output = []
+const teams = ref([])
 
-    for (let t in _teams) {
-        let _team = _teams[t]
+// watch(list, value => {
+//     let _teams = value
+//     let output = []
 
-        output.push({
-            average: calcAverage(_team),
-            name: _team.name,
-            courseName: _team.courseName,
-            organization: _team.participants[0].jobPlace,
-            identifier: _team.identifier,
-            grades: _team.grades,
-            id: _team.id,
-        })
-    }
+//     for (let t in _teams) {
+//         let _team = _teams[t]
 
-    output.sort((a, b) => {
-        if (a.average < b.average) return 1
-        if (a.average > b.average) return -1
-        return 0
-    })
+//         output.push({
+//             average: calcAverage(_team),
+//             name: _team.name,
+//             courseName: _team.courseName,
+//             organization: _team.participants[0].jobPlace,
+//             identifier: _team.identifier,
+//             grades: _team.grades,
+//             id: _team.id,
+//             additionals: 0
+//         })
+//     }
 
-    return output
-})
+//     output.sort((a, b) => {
+//         if (a.average < b.average) return 1
+//         if (a.average > b.average) return -1
+//         return 0
+//     })
+
+//     console.log('output: ', output)
+
+//     teams.value = output.map(i => i)
+
+//     // teams.value = output
+
+//     console.log('teams: ', teams.value)
+// })
+
+// const teams = computed(() => {
+
+
+
+
+//     return output
+// })
 
 const getGradeValue = (team, expert) => {
     let grade = team.grades.find(i => {
@@ -75,57 +96,54 @@ const calcAverage = (team) => {
 
     if (sum > 0) val = sum / team.grades.length
 
-    // return Math.round(val)
-    return val.toLocaleString('ru', {
-        style: 'decimal',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
+    if (team.additionals) {
+        val = val + team.additionals
+    }
+
+    teams.value.sort((a, b) => {
+        if (a.average < b.average) return 1
+        if (a.average > b.average) return -1
+        return 0
     })
+
+    return val
 }
 
-const additionals = ref([])
+const initTeams = () => {
+    let _teams = store.state.teams.list
+    let output = []
 
-const addAdditional = (teamId) => {
-    const team = teams.value.find(i => i.id === teamId)
+    for (let t in _teams) {
+        let _team = _teams[t]
 
-    const addTeam = additionals.value.findIndex(t => t.id === teamId)
-
-    if (addTeam !== -1) {
-        if ((additionals.value[addTeam].value + 0.01) === 0) {
-            additionals.value.splice(addTeam, 1)
-        } else {
-            additionals.value[addTeam].value = additionals.value[addTeam].value + 0.01
-        }
-    } else {
-        additionals.value.push({
-            id: teamId,
-            value: 0.01
+        output.push({
+            average: calcAverage(_team),
+            name: _team.name,
+            courseName: _team.courseName,
+            organization: _team.participants[0].jobPlace,
+            identifier: _team.identifier,
+            grades: _team.grades,
+            id: _team.id,
+            additionals: 0
         })
     }
+
+    output.sort((a, b) => {
+        if (a.average < b.average) return 1
+        if (a.average > b.average) return -1
+        return 0
+    })
+
+    teams.value = output
 }
 
-const dropAdditional = (teamId) => {
-    const team = teams.value.find(i => i.id === teamId)
+watch(teams, value => {
+    console.log('value: ', value)
+})
 
-    const addTeam = additionals.value.findIndex(t => t.id === teamId)
-
-    if (addTeam !== -1) {
-        if ((additionals.value[addTeam].value - 0.01) === 0) {
-            additionals.value.splice(addTeam, 1)
-        } else {
-            additionals.value[addTeam].value = additionals.value[addTeam].value - 0.01
-        }
-    } else {
-        additionals.value.push({
-            id: teamId,
-            value: -0.01
-        })
-    }
-}
-
-const isAdditionals = (teamId) => {
-    let res = additionals.value.find(i => i.id === teamId)
-    return res
+const setAdditional = (team) => {
+    team.average = (+team.average) + (+team.additionals)
+    console.log('team: ', team)
 }
 </script>
 
@@ -500,7 +518,7 @@ const isAdditionals = (teamId) => {
                     </td>
 
                     <td class="px-4 py-3 border">
-                        <div v-if="isAdditionals(team.id)"
+                        <!-- <div v-if="isAdditionals(team.id)"
                             class="text-center text-sm mb-3 font-semibold"
                         >
                             {{ isAdditionals(team.id).value.toLocaleString('ru', { style: 'decimal' }) }}
@@ -523,7 +541,8 @@ const isAdditionals = (teamId) => {
                             "
                                 @click="addAdditional(team.id)"
                             >+0,01</div>
-                        </div>
+                        </div> -->
+                        <Input v-model="team.additionals" type="number" class="w-16" @focusout="setAdditional(team)" />
                     </td>
 
                     <td class="px-4 py-3 border">
