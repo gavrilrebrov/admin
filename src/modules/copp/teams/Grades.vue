@@ -551,7 +551,7 @@ const setAdditional = (team) => {
                                 font-medium
                             "
                         >
-                            {{ calcAverage(team) }}
+                            {{ calcAverage(team).toLocaleString('ru', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </div>
                     </td>
                 </tr>
