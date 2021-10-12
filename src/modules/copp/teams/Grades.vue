@@ -100,12 +100,6 @@ const calcAverage = (team) => {
         val = val + team.additionals
     }
 
-    teams.value.sort((a, b) => {
-        if (a.average < b.average) return 1
-        if (a.average > b.average) return -1
-        return 0
-    })
-
     return val
 }
 
@@ -138,7 +132,11 @@ const initTeams = () => {
 }
 
 const setAdditional = (team) => {
-    team.average = (+team.average) + (+team.additionals)
+    teams.value.sort((a, b) => {
+        if ((a.average + a.additionals) < (b.average + b.additionals)) return 1
+        if ((a.average + a.additionals) > (b.average + b.additionals)) return -1
+        return 0
+    })
 }
 </script>
 
