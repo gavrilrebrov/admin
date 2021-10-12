@@ -137,13 +137,8 @@ const initTeams = () => {
     teams.value = output
 }
 
-watch(teams, value => {
-    console.log('value: ', value)
-})
-
 const setAdditional = (team) => {
     team.average = (+team.average) + (+team.additionals)
-    console.log('team: ', team)
 }
 </script>
 
