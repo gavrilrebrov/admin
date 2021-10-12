@@ -356,7 +356,7 @@ const setAdditional = (team) => {
                 </div>
             </div>
 
-            <div class="flex justify-between">
+            <div class="flex justify-between mt-14">
                 <div class="w-72">
                     Член комиссии
                 </div>
