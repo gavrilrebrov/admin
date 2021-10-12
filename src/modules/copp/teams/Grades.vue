@@ -246,7 +246,7 @@ const setAdditional = (team) => {
 
                     <td class="border p-2 text-center">
                         <div>
-                            {{ calcAverage(team) }}
+                            {{ calcAverage(team).toLocaleString('ru', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </div>
                     </td>
 
