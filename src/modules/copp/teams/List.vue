@@ -50,7 +50,8 @@ const teams = computed(() => {
                 jobPlace: i.jobPlace,
                 jobPosition: i.jobPosition,
                 identifier: i.identifier,
-                docs: _docs
+                docs: _docs,
+                id: i.id
             }
         })
 
@@ -108,6 +109,10 @@ const columns = [
 const save = () => {
     store.commit('notice', null)
     store.dispatch('teams/saveGrades', teams.value)
+}
+
+const downloadDocuments = (id) => {
+    store.dispatch('teams/downloadDocuments', id)
 }
 
 moment.locale('ru')
@@ -266,6 +271,21 @@ moment.locale('ru')
                             </div>
                         </div>
 
+                        <div class="mr-5 cursor-pointer"
+                            @click="downloadDocuments(participant.id)"
+                        >
+                            <div class="flex gap-x-2 text-xs bg-blue-100 text-blue-500
+                                font-semibold
+                                px-2 py-1
+                                text-xs
+                                flex items-center justify-center
+                                rounded
+                            ">
+                                <Icon icon="download" class="w-4 h-4 text-blue-500" />
+                                <span>Документы</span>
+                            </div>
+                        </div>
+
                         <div class="
                                 w-72 flex-shrink-0
                                 flex flex-col
@@ -307,7 +327,7 @@ moment.locale('ru')
                         </div>
                     </div>
 
-                    <div class="text-xs flex px-5 pb-5 font-semibold ml-20 gap-x-2" v-if="participant.docs">
+                    <!-- <div class="text-xs flex px-5 pb-5 font-semibold ml-20 gap-x-2" v-if="participant.docs">
                         <a :href="participant.docs.passportMain" download v-if="participant.docs.passportMain"
                             class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
                         >Паспорт: главная</a>
@@ -335,7 +355,7 @@ moment.locale('ru')
                         <a :href="participant.docs.educationAdditional" download v-if="participant.docs.educationAdditional"
                             class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
                         >Дополнительный документ</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </Card>

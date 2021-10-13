@@ -204,5 +204,35 @@ export default {
 
             ctx.commit('isLoading', false)
         },
+
+        async downloadDocuments (ctx, id) {
+            ctx.commit('isLoading', true)
+
+            try {
+                const res = await fetch(`${url}/participants/${id}/documents`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const blob = await res.blob()
+
+                const _url = window.URL || window.webkitURL;
+                const link = _url.createObjectURL(blob);
+
+                let a = document.createElement('a')
+                a.href = link
+                a.target = '_blank'
+
+                document.body.appendChild(a)
+                a.click()
+                document.body.removeChild(a)
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('isLoading', false)
+        }
     }
 }
