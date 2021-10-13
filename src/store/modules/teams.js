@@ -77,7 +77,6 @@ export default {
                 const countJson = await countRes.json()
 
                 if (res.ok) {
-                    console.log('json: ', json)
                     ctx.commit('list', json)
                 }
 
@@ -95,8 +94,6 @@ export default {
                 const docJson = await docRes.json()
 
                 if (docRes.ok) ctx.commit('documents', docJson)
-
-                console.log('docJson: ', docJson)
             } catch (err) {
                 console.error('err: ', err)
             }

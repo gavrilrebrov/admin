@@ -36,11 +36,11 @@ const teams = computed(() => {
                     application: docs.application ? `https://api.copp14.ru${docs.application.url}` : null,
                     agreement: docs.agreement ? `https://api.copp14.ru${docs.agreement.url}` : null,
                     inn: docs.inn ? `https://api.copp14.ru${docs.inn.url}` : null,
-                    snils: docs.inn ? `https://api.copp14.ru${docs.snils.url}` : null,
+                    snils: docs.snils ? `https://api.copp14.ru${docs.snils.url}` : null,
+                    education: docs.education ? `https://api.copp14.ru${docs.education.url}` : null,
+                    educationAdditional: docs.education_additional ? `https://api.copp14.ru${docs.education_additional.url}` : null,
                 }
             }
-
-            console.log('docs: ', docs)
 
             return {
                 role,
@@ -327,6 +327,14 @@ moment.locale('ru')
                         <a :href="participant.docs.snils" download v-if="participant.docs.snils"
                             class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
                         >СНИЛС</a>
+
+                        <a :href="participant.docs.education" download v-if="participant.docs.education"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >Документ об образовании</a>
+
+                        <a :href="participant.docs.educationAdditional" download v-if="participant.docs.educationAdditional"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >Дополнительный документ</a>
                     </div>
                 </div>
             </div>
