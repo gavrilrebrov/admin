@@ -13,6 +13,7 @@ const user = computed(() => store.state.user)
 
 const teams = computed(() => {
     let list = store.state.teams.list
+    let documents = store.state.teams.documents
 
     let output = []
 
@@ -25,6 +26,22 @@ const teams = computed(() => {
             if (i.role === 'designer') role = 3
             if (i.role === 'developer') role = 4
 
+            let docs = documents.find(d => d.user.username === `${i.role}-${i.identifier}`)
+            let _docs = null
+
+            if (docs) {
+                _docs = {
+                    passportMain: docs.passport_main ? `https://api.copp14.ru${docs.passport_main.url}` : null,
+                    passportAddress: docs.passport_address ? `https://api.copp14.ru${docs.passport_address.url}` : null,
+                    application: docs.application ? `https://api.copp14.ru${docs.application.url}` : null,
+                    agreement: docs.agreement ? `https://api.copp14.ru${docs.agreement.url}` : null,
+                    inn: docs.inn ? `https://api.copp14.ru${docs.inn.url}` : null,
+                    snils: docs.inn ? `https://api.copp14.ru${docs.snils.url}` : null,
+                }
+            }
+
+            console.log('docs: ', docs)
+
             return {
                 role,
                 name: i.name,
@@ -33,6 +50,7 @@ const teams = computed(() => {
                 jobPlace: i.jobPlace,
                 jobPosition: i.jobPosition,
                 identifier: i.identifier,
+                docs: _docs
             }
         })
 
@@ -213,78 +231,102 @@ moment.locale('ru')
             </template>
 
             <div class="flex flex-col divide-y divide-gray-200 -m-5">
-                <div class="
-                        flex
-                        text-sm
-                        items-center
-                        py-3
-                    "
+                <div class=""
                     v-for="participant in team.participants"
                     :key="participant.id"
                 >
                     <div class="
-                            flex-shrink-0
-                            w-24
-                            text-gray-300
-                            font-semibold
-                            text-lg
-                            pl-5
-                        "
-                    >
-                        #{{ participant.identifier }}
-                    </div>
-
-                    <div class="
-                            flex-grow
-                        "
-                    >
-                        <div class="font-medium">
-                            {{ participant.name }}
-                        </div>
-
-                        <div class="text-gray-500">
-                            {{ participant.jobPosition }}
-                        </div>
-                    </div>
-
-                    <div class="
-                            w-72 flex-shrink-0
-                            flex flex-col
-                            gap-y-1
-                            text-sm
-                        "
-                    >
-                        <div class="flex items-center gap-x-2">
-                            <Icon icon="phone" class="w-4 h-4 text-blue-500" />
-                            <a :href="`tel:+7${participant.phone}`">{{ participant.phone }}</a>
-                        </div>
-                        <div class="flex items-center gap-x-2">
-                            <Icon icon="at-symbol" class="w-4 h-4 text-blue-500" />
-                            <a :href="`mailto:${participant.email}`">{{ participant.email }}</a>
-                        </div>
-                    </div>
-
-                    <div class="
-                            w-48 flex-shrink-0
-                        "
-                    >
+                        flex
+                        text-sm
+                        items-center
+                        py-3
+                    ">
                         <div class="
-                                text-xs
+                                flex-shrink-0
+                                w-24
+                                text-gray-300
                                 font-semibold
-                                text-white
-                                inline-block
-                                rounded-sm
+                                text-lg
+                                pl-5
                             "
-                            :class="{
-                                'text-red-500 bg-red-100': participant.role === 1,
-                                'text-yellow-500 bg-yellow-100': participant.role === 3,
-                                'text-indigo-500 bg-indigo-100': participant.role === 4,
-                                'text-green-500 bg-green-100': participant.role === 2,
-                            }"
-                            style="padding:2px 5px"
                         >
-                            {{ getRoleName(participant.role) }}
+                            #{{ participant.identifier }}
                         </div>
+
+                        <div class="
+                                flex-grow
+                            "
+                        >
+                            <div class="font-medium">
+                                {{ participant.name }}
+                            </div>
+
+                            <div class="text-gray-500">
+                                {{ participant.jobPosition }}
+                            </div>
+                        </div>
+
+                        <div class="
+                                w-72 flex-shrink-0
+                                flex flex-col
+                                gap-y-1
+                                text-sm
+                            "
+                        >
+                            <div class="flex items-center gap-x-2">
+                                <Icon icon="phone" class="w-4 h-4 text-blue-500" />
+                                <a :href="`tel:+7${participant.phone}`">{{ participant.phone }}</a>
+                            </div>
+                            <div class="flex items-center gap-x-2">
+                                <Icon icon="at-symbol" class="w-4 h-4 text-blue-500" />
+                                <a :href="`mailto:${participant.email}`">{{ participant.email }}</a>
+                            </div>
+                        </div>
+
+                        <div class="
+                                w-48 flex-shrink-0
+                            "
+                        >
+                            <div class="
+                                    text-xs
+                                    font-semibold
+                                    text-white
+                                    inline-block
+                                    rounded-sm
+                                "
+                                :class="{
+                                    'text-red-500 bg-red-100': participant.role === 1,
+                                    'text-yellow-500 bg-yellow-100': participant.role === 3,
+                                    'text-indigo-500 bg-indigo-100': participant.role === 4,
+                                    'text-green-500 bg-green-100': participant.role === 2,
+                                }"
+                                style="padding:2px 5px"
+                            >
+                                {{ getRoleName(participant.role) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs flex px-5 pb-5 font-semibold ml-20 gap-x-2" v-if="participant.docs">
+                        <a :href="participant.docs.passportMain" download v-if="participant.docs.passportMain"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >Паспорт: главная</a>
+
+                        <a :href="participant.docs.passportAddress" download v-if="participant.docs.passportAddress"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >Паспорт: прописка</a>
+
+                        <a :href="participant.docs.application" download v-if="participant.docs.application"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >Заявление</a>
+
+                        <a :href="participant.docs.inn" download v-if="participant.docs.inn"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >ИНН</a>
+
+                        <a :href="participant.docs.snils" download v-if="participant.docs.snils"
+                            class="bg-blue-100 text-blue-500 px-2 py-1 rounded"
+                        >СНИЛС</a>
                     </div>
                 </div>
             </div>

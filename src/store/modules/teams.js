@@ -15,7 +15,9 @@ export default {
             count: 0,
 
             grades: [],
-            experts: []
+            experts: [],
+
+            documents: [],
         }
     },
 
@@ -38,6 +40,10 @@ export default {
 
         experts (state, value) {
             state.experts = value
+        },
+
+        documents (state, value) {
+            state.documents = value
         }
     },
 
@@ -78,6 +84,19 @@ export default {
                 if (countRes.ok) {
                     ctx.commit('count', countJson)
                 }
+
+                const docRes = await fetch(`${url}/documents`, {
+                    method: 'get',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    }
+                })
+
+                const docJson = await docRes.json()
+
+                if (docRes.ok) ctx.commit('documents', docJson)
+
+                console.log('docJson: ', docJson)
             } catch (err) {
                 console.error('err: ', err)
             }
