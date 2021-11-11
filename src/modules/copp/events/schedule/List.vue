@@ -3,11 +3,16 @@ import Card from '../../../../components/Card.vue'
 import Icon from '../../../../components/Icon.vue'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const store = useStore()
-const dates = computed(() => store.getters['events/orderedSchedules'])
+const dates = computed(() => store.getters['events/schedules/ordered'])
 const route = useRoute()
+const router = useRouter()
+
+const create = () => {
+    router.push(`/events/${route.params.eventId}/schedule/create`)
+}
 </script>
 
 <template>
@@ -16,6 +21,13 @@ const route = useRoute()
         <template #header>
             <div class="font-medium text-gray-900 text-lg flex-grow">
                 Программа мероприятия
+            </div>
+
+            <div>
+                <button class="button" @click="create">
+                    <Icon icon="plus" class="h-5 w-5" />
+                    <span>Создать</span>
+                </button>
             </div>
         </template>
 

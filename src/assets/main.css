@@ -31,3 +31,11 @@ body {
 @media print {
     @page { margin: 10px }
 }
+
+.button {
+    @apply text-sm font-semibold bg-blue-500 text-white py-2 px-3 rounded-md inline-flex items-center gap-x-1
+}
+
+.button_red {
+    @apply bg-red-500
+}

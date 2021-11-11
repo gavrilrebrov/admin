@@ -4,6 +4,7 @@ import { onMounted, computed } from 'vue'
 import Login from './layouts/Login.vue'
 import Sidebar from './layouts/Sidebar.vue'
 import Copp from './layouts/Copp.vue'
+import Events from './layouts/Events.vue'
 
 const store = useStore()
 const user = computed(() => store.state.user)
@@ -18,10 +19,13 @@ const isCopp = computed(() => {
         (
             user.value.role.name === 'employment-support' ||
             user.value.role.name === 'teams' ||
-            user.value.role.name === 'events' ||
             user.value.role.name === 'proo-expert'
         )
     )
+})
+
+const isEvents = computed(() => {
+    return user.value && user.value.role && user.value.role.name === 'events'
 })
 </script>
 
@@ -32,5 +36,7 @@ const isCopp = computed(() => {
     <Sidebar v-if="user && user.role.name === 'site'" />
 
     <Copp v-if="isCopp" />
+
+    <Events v-if="isEvents" />
 </div>
 </template>

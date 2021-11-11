@@ -5,17 +5,30 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { Calendar, DatePicker } from 'v-calendar'
 import moment from 'moment'
 
-const props = defineProps(['modelValue', 'size'])
+const props = defineProps(['modelValue', 'size', 'type'])
 const emit = defineEmits(['update:modelValue'])
 
 let modelValue = ref(props.modelValue)
 
 let label = computed(() => {
-    if (modelValue.value === null) {
-        return 'Весь период'
-    } else {
-        return `${moment(modelValue.value.start).format('DD.MM.YYYY')} - ${moment(modelValue.value.end).format('DD.MM.YYYY')}`
+    if (props.type === 'daterange') {
+        if (modelValue.value === null || modelValue.value === '') {
+            return 'Весь период'
+        } else {
+            return `${moment(modelValue.value.start).format('DD.MM.YYYY')} - ${moment(modelValue.value.end).format('DD.MM.YYYY')}`
+        }
     }
+
+    if (props.type === 'datetime') {
+        if (modelValue.value === null || modelValue.value === '') {
+            return 'Выберите дату и время'
+        } else {
+            return `${moment(modelValue.value).format('DD.MM.YYYY HH:mm')}`
+        }
+    }
+
+    return ''
+
 })
 
 const accept = (close) => {
@@ -31,6 +44,10 @@ const reset = (close) => {
 
 watch(() => props.modelValue, value => {
     modelValue.value = value
+})
+
+watch(() => modelValue.value, value => {
+    emit('update:modelValue', value)
 })
 </script>
 
@@ -79,9 +96,11 @@ watch(() => props.modelValue, value => {
                 sm:text-sm
             "
         >
-            <DatePicker is-range :columns="2" v-model="modelValue" />
+            <DatePicker is-range :columns="2" v-model="modelValue" v-if="props.type === 'daterange'" />
 
-            <div class="p-4 border-t flex items-center gap-x-2">
+            <DatePicker v-model="modelValue" v-if="props.type === 'datetime'" mode="dateTime" />
+
+            <div class="p-4 border-t flex items-center gap-x-2" v-if="props.type === 'daterange'">
                 <button
                     class="bg-blue-500
                         text-white

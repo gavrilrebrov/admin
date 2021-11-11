@@ -5,7 +5,7 @@ import { useSlots, onMounted } from 'vue'
 const slots = useSlots()
 
 onMounted(() => {
-    console.log('slots: ', slots.default)
+    // console.log('slots: ', slots.default)
 })
 </script>
 

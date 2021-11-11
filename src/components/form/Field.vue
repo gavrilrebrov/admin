@@ -4,6 +4,7 @@ import Input from './Input.vue'
 import Editor from './Editor.vue'
 import Select from './Select.vue'
 import Datepicker from './Datepicker.vue'
+import ImageUploader from './ImageUploader.vue'
 
 const props = defineProps(['modelValue', 'label', 'type', 'items', 'size'])
 
@@ -22,16 +23,18 @@ watch(() => props.modelValue, value => {
 
 <template>
 <div>
-     <div class="text-sm font-medium text-gray-500 mb-2">
-         {{ props.label }}
-     </div>
+    <div class="text-sm font-medium text-gray-500 mb-2">
+        {{ props.label }}
+    </div>
 
-     <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange'" :type="props.type" v-model="modelValue" />
+    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime'" :type="props.type" v-model="modelValue" />
 
-     <Editor :size="size" v-if="type === 'editor'" v-model="modelValue" />
+    <Editor :size="size" v-if="type === 'editor'" v-model="modelValue" />
 
-     <Select :size="size" v-if="type === 'select'" :items="items" v-model="modelValue" />
+    <Select :size="size" v-if="type === 'select'" :items="items" v-model="modelValue" />
 
-    <Datepicker :size="size" v-if="type === 'daterange'" v-model="modelValue" />
+    <Datepicker :size="size" v-if="type === 'daterange' || type === 'datetime' || type === 'date'" :type="type" v-model="modelValue" />
+
+    <!-- <ImageUpoader :size="size" v-if="type === 'image'" v-model="modelValue" /> -->
 </div>
 </template>

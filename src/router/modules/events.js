@@ -6,7 +6,9 @@ import EventsSchedule from '../../modules/copp/events/Schedule.vue'
 import EventsParticipants from '../../modules/copp/events/Participants.vue'
 import EventsCategories from '../../modules/copp/events/Categories.vue'
 import ScheduleList from '../../modules/copp/events/schedule/List.vue'
+import ScheduleEdit from '../../modules/copp/events/schedule/Edit.vue'
 import CategoriesList from '../../modules/copp/events/categories/List.vue'
+import CategoriesEdit from '../../modules/copp/events/categories/Edit.vue'
 
 export default {
     path: '/events',
@@ -16,6 +18,27 @@ export default {
             path: '',
             component: EventsList,
             name: 'events-list'
+        },
+        {
+            path: 'categories',
+            component: EventsCategories,
+            children: [
+                {
+                    path: '',
+                    component: CategoriesList,
+                    name: 'events-categories-list'
+                },
+                {
+                    path: 'create',
+                    component: CategoriesEdit,
+                    name: 'events-categories-create'
+                },
+                {
+                    path: ':categoryId',
+                    component: CategoriesEdit,
+                    name: 'events-categories-edit'
+                }
+            ]
         },
         {
             path: ':eventId',
@@ -34,6 +57,16 @@ export default {
                             path: '',
                             component: ScheduleList,
                             name: 'events-schedule-list'
+                        },
+                        {
+                            path: 'create',
+                            component: ScheduleEdit,
+                            name: 'events-schedule-create'
+                        },
+                        {
+                            path: ':scheduleId',
+                            component: ScheduleEdit,
+                            name: 'events-schedule-edit'
                         }
                     ]
                 },
@@ -42,17 +75,6 @@ export default {
                     component: EventsParticipants,
                     name: 'events-participants'
                 },
-                {
-                    path: 'categories',
-                    component: EventsCategories,
-                    children: [
-                        {
-                            path: '',
-                            component: CategoriesList,
-                            name: 'events-categories-list'
-                        }
-                    ]
-                }
             ]
         }
     ]

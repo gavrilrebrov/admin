@@ -2,25 +2,34 @@
 import Card from '../../../../components/Card.vue'
 import Table from '../../../../components/Table.vue'
 import Icon from '../../../../components/Icon.vue'
+import Notice from '@/components/Notice.vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted } from 'vue'
 
 const store = useStore()
 const route = useRoute()
-const isLoading = computed(() => store.state.events.isLoading)
+const router = useRouter()
+const isLoading = computed(() => store.state.events.categories.isLoading)
 const list = computed(() => {
-    return store.state.events.categories.map(i => ({
+    return store.state.events.categories.list && store.state.events.categories.list.map(i => ({
         name: i.name,
-        schedules: i.schedules.length,
+        // schedules: i.schedules.length,
         id: i.id
     }))
 })
 
 const columns = [
     { label: 'Название', key: 'name', },
-    { label: 'Расписания', key: 'schedules' }
 ]
+
+const create = () => {
+    router.push(`/events/categories/create`)
+}
+
+const edit = id => {
+    router.push(`/events/categories/${id}`)
+}
 </script>
 
 <template>
@@ -38,8 +47,37 @@ const columns = [
         />
     </div>
 
-    <Table :columns="columns" :data="list" :edit="`events/${route.params.eventId}/categories`"
-        v-if="!isLoading"
-    />
+    <Notice class="mb-5" />
+
+    <Card v-if="!isLoading">
+        <template #header>
+            <div class="font-medium text-gray-900 text-lg flex-grow">
+                Список категорий
+            </div>
+
+            <div class="flex justify-end">
+                <button class="text-sm font-semibold bg-blue-500 text-white py-2 px-3 rounded-md inline-flex items-center gap-x-1"
+                    @click="create"
+                >
+                    <Icon icon="plus" class="w-5 h-5" />
+                    <span>Создать</span>
+                </button>
+            </div>
+        </template>
+
+        <div class="divide-y -mx-5 -my-5">
+            <div v-for="item, index in list" :key="index"
+                class="flex justify-between py-3 px-5"
+            >
+                <div>
+                    {{ item.name }}
+                </div>
+
+                <button @click="edit(item.id)">
+                    <Icon icon="pencil" class="w-5 h-5 text-blue-500" />
+                </button>
+            </div>
+        </div>
+    </Card>
 </div>
 </template>

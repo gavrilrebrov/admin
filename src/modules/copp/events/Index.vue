@@ -9,7 +9,13 @@ const store = useStore()
 const router = useRouter()
 
 const event = computed(() => store.state.events.item)
-const count = computed(() => store.state.events.count)
+const count = computed(() => {
+    if (route.name === 'events-list') {
+        return store.state.events.count
+    } else if (route.name === 'events-categories-list') {
+        return store.state.events.categories.count
+    }
+})
 const back = () => {
     store.dispatch('events/getList')
     router.push('/events')
@@ -39,7 +45,7 @@ const back = () => {
                     py-4 gap-x-4
                 "
             >
-                <button @click="back" v-if="route.name !== 'events-list'">
+                <button @click="back" v-if="route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-edit' && route.name !== 'events-categories-create'">
                     <Icon icon="arrow-left" class="w-6 text-blue-500" />
                 </button>
 
@@ -47,12 +53,16 @@ const back = () => {
                     Мероприятия
                 </div>
 
-                <div v-if="route.name !== 'events-list' && event">
+                <div v-if="(route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-create') && event">
                     {{ event.name }}
+                </div>
+
+                <div v-if="route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
+                    Категории событий
                 </div>
             </div>
 
-            <div v-if="route.name === 'events-list'"
+            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list'"
                 class="
                     flex-grow
                     text-sm
@@ -62,11 +72,25 @@ const back = () => {
                 Найдено записей: {{ count }}
             </div>
 
+            <div class="inline-flex gap-x-2" v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
+                <router-link :to="`/events`" class="py-2 px-3 text-sm rounded font-semibold text-gray-500"
+                    :class="{ 'text-blue-500 bg-blue-100': route.name === 'events-list' }"
+                >
+                    Мероприятия
+                </router-link>
+
+                <router-link to="/events/categories" class="py-2 px-3 text-sm rounded font-semibold text-gray-500"
+                    :class="{ 'text-blue-500 bg-blue-100': route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit' }"
+                >
+                    Категории событий
+                </router-link>
+            </div>
+
             <div class="
                     inline-flex
                     gap-x-2
                 "
-                v-if="route.name !== 'events-list'"
+                v-if="route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-create' && route.name !== 'events-categories-edit'"
             >
                 <router-link
                     :to="`/events/${route.params.eventId}`"
@@ -117,21 +141,6 @@ const back = () => {
                     }"
                 >
                     Участники
-                </router-link>
-
-                <router-link
-                    :to="`/events/${route.params.eventId}/categories`"
-                    class="
-                        py-2 px-3
-                        text-sm rounded
-                        font-semibold
-                        text-gray-500
-                    "
-                    :class="{
-                        'text-blue-500 bg-blue-100': route.name === 'events-categories'
-                    }"
-                >
-                    Категории
                 </router-link>
             </div>
         </div>

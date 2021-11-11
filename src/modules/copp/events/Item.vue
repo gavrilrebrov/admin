@@ -6,7 +6,9 @@ import { useStore } from 'vuex'
 const route = useRoute()
 const store = useStore()
 
-onMounted(() => store.dispatch('events/getItem', route.params.eventId))
+onMounted(() => {
+    store.dispatch('events/getItem', route.params.eventId)
+})
 </script>
 
 <template>

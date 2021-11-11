@@ -44,11 +44,27 @@ const fields = [
             slug: 'slug'
         }
     ],
+    [
+        {
+            label: 'Описание',
+            slug: 'description',
+            cols: 8,
+            type: 'editor'
+        },
+        {
+            label: 'Лого',
+            slug: 'logo',
+            cols: 4,
+            type: 'image'
+        }
+    ]
 ]
 
 let values = ref({
     name: event.value ? event.value.name : '',
     slug: event.value ? event.value.slug : '',
+    description: event.value ? event.value.description : '',
+    // logo: event.value ? event.value.logo : '',
 })
 
 const title = computed(() => {
@@ -59,6 +75,7 @@ watch(event, value => {
     if (value) {
         values.value.name = value.name
         values.value.slug = value.slug
+        values.value.description = value.description
     }
 })
 </script>

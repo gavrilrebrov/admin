@@ -35,6 +35,7 @@ const onDownload = (e, id) => {
                 class="
                     bg-gray-50
                 "
+                v-if="columns"
             >
                 <tr>
                     <th class="
@@ -66,6 +67,10 @@ const onDownload = (e, id) => {
                 "
             >
                 <tr v-for="item, index in data" :key="index">
+                    <td v-if="!columns" class="px-6 py-3 text-sm">
+                        {{ item.name }}
+                    </td>
+
                     <td v-for="col, colIndex in columns"
                         :key="colIndex"
                         class="px-6 py-4
@@ -160,8 +165,12 @@ const onDownload = (e, id) => {
                         </div>
                     </td>
 
-                    <td class="px-6 py-4 text-right"
+                    <td class="px-6 text-right flex items-center justify-end"
                         v-if="edit"
+                        :class="{
+                            'py-4': columns,
+                            'py-3': !columns
+                        }"
                     >
                         <router-link :to="`/${edit}/${item.id}`"
                             class="
@@ -170,13 +179,21 @@ const onDownload = (e, id) => {
                             "
                         >
                             <Icon icon="pencil"
-                                class="text-blue-500 w-6"
+                                class="text-blue-500"
+                                :class="{
+                                    'w-6': columns,
+                                    'w-5': !columns
+                                }"
                             />
                         </router-link>
                     </td>
 
-                    <td class="px-6 py-4 text-right"
+                    <td class="px-6 text-right flex items-center justify-end"
                         v-if="show"
+                        :class="{
+                            'py-4': columns,
+                            'py-3': !columns
+                        }"
                     >
                         <router-link :to="`/${show}/${item.id}`"
                             class="
@@ -185,7 +202,11 @@ const onDownload = (e, id) => {
                             "
                         >
                             <Icon icon="eye"
-                                class="text-blue-500 w-6"
+                                class="text-blue-500"
+                                :class="{
+                                    'w-6': columns,
+                                    'w-5': !columns
+                                }"
                             />
                         </router-link>
                     </td>
