@@ -114,7 +114,7 @@ export default {
 
             let query = {
                 event: eventId,
-                _sort: 'startDate:ASC',
+                _sort: 'startDate:ASC,endDate:ASC',
                 _limit: -1,
             }
 

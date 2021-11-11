@@ -81,7 +81,7 @@ onMounted(() => store.dispatch('events/schedules/getList', route.params.eventId)
                         :key="item.id"
                         class="flex gap-x-5 p-5"
                     >
-                        <div class="w-1/12
+                        <div class="w-30
                                 font-semibold
                                 text-blue-500
                                 flex-shrink-0
