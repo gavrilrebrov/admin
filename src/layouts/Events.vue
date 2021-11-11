@@ -12,8 +12,7 @@ const store = useStore()
 const user = computed(() => store.state.user)
 
 onMounted(async () => {
-    if (route.name !== 'events-item') {
-        await store.dispatch('events/getList')
+    if (route.name === 'home') {
         router.push('/events')
     }
 })

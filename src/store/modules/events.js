@@ -21,9 +21,13 @@ export default {
     state () {
         return {
             list: [],
-            isLoading: false,
             count: 0,
             item: null,
+
+            loading: {
+                get: false,
+                save: false
+            }
         }
     },
 
@@ -36,18 +40,22 @@ export default {
             state.count = value
         },
 
-        isLoading (state, value) {
-            state.isLoading = value
-        },
-
         item (state, value) {
             state.item = value
         },
+
+        loadingGet (state, value) {
+            state.loading.get = value
+        },
+
+        loadingSave (state, value) {
+            state.loading.save = value
+        }
     },
 
     actions: {
         async getList (ctx) {
-            ctx.commit('isLoading', true)
+            ctx.commit('loadingGet', true)
 
             let query = {
                 project: ctx.rootState.user.project,
@@ -65,8 +73,6 @@ export default {
                 })
 
                 const json = await res.json()
-
-                console.log('json: ', json)
 
                 const countRes = await fetch(`${url}/events/count?${query}`, {
                     method: 'get',
@@ -88,11 +94,11 @@ export default {
                 console.error('err: ', err)
             }
 
-            ctx.commit('isLoading', false)
+            ctx.commit('loadingGet', false)
         },
 
         async getItem (ctx, id) {
-            ctx.commit('isLoading', true)
+            ctx.commit('loadingGet', true)
 
             try {
                 const res = await fetch(`${url}/events/${id}`, {
@@ -110,11 +116,11 @@ export default {
             }
 
 
-            ctx.commit('isLoading', false)
+            ctx.commit('loadingGet', false)
         },
 
         async save (ctx, data) {
-            ctx.commit('isLoading', true)
+            ctx.commit('loadingSave', true)
 
             try {
                 const formData = new FormData()
@@ -146,7 +152,7 @@ export default {
                 console.error('err: ', err)
             }
 
-            ctx.commit('isLoading', false)
+            ctx.commit('loadingSave', false)
         },
     }
 }

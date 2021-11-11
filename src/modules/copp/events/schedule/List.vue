@@ -2,7 +2,7 @@
 import Card from '../../../../components/Card.vue'
 import Icon from '../../../../components/Icon.vue'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const store = useStore()
@@ -10,14 +10,31 @@ const dates = computed(() => store.getters['events/schedules/ordered'])
 const route = useRoute()
 const router = useRouter()
 
+const loading = store.state.events.schedules.loading
+
 const create = () => {
     router.push(`/events/${route.params.eventId}/schedule/create`)
 }
+
+onMounted(() => store.dispatch('events/schedules/getList', route.params.eventId))
 </script>
 
 <template>
 <div>
-    <Card>
+    <div v-if="loading.get" class="
+            w-full h-full
+            flex items-center
+            justify-center
+        "
+    >
+        <Icon icon="loader" class="
+                w-16 h-16 text-blue-500
+                animate-spin
+            "
+        />
+    </div>
+
+    <Card v-if="!loading.get">
         <template #header>
             <div class="font-medium text-gray-900 text-lg flex-grow">
                 Программа мероприятия

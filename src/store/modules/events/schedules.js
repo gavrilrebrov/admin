@@ -1,6 +1,7 @@
 import qs from 'query-string'
 import config from '../../../config.json'
 import moment from 'moment/min/moment-with-locales'
+import router from '../../../router'
 import VueCookies from 'vue-cookies'
 moment.locale('ru')
 
@@ -13,16 +14,11 @@ export default {
         return {
             list: [],
             item: null,
-            isLoading: false,
             count: 0,
 
-            values: {
-                title: '',
-                startDate: null,
-                endDate: null,
-                description: '',
-                category: null,
-                organizer: '',
+            loading: {
+                get: false,
+                save: false
             }
         }
     },
@@ -36,16 +32,16 @@ export default {
             state.item = value
         },
 
-        isLoading (state, value) {
-            state.isLoading = value
-        },
-
         count (state, value) {
             state.count = value
         },
 
-        values (state, value) {
-            state.values = value
+        loadingGet (state, value) {
+            state.loading.get = value
+        },
+
+        loadingSave (state, value) {
+            state.loading.save = value
         }
     },
 
@@ -114,7 +110,7 @@ export default {
 
     actions: {
         async getList (ctx, eventId) {
-            ctx.commit('isLoading', true)
+            ctx.commit('loadingGet', true)
 
             let query = {
                 event: eventId,
@@ -148,11 +144,11 @@ export default {
                 console.error('err: ', err)
             }
 
-            ctx.commit('isLoading', false)
+            ctx.commit('loadingGet', false)
         },
 
         async getItem (ctx, id) {
-            ctx.commit('isLoading', true)
+            ctx.commit('loadingGet', true)
 
             try {
                 const res = await fetch(`${url}/schedules/${id}`, {
@@ -169,7 +165,67 @@ export default {
                 console.error('err: ', err)
             }
 
-            ctx.commit('isLoading', false)
+            ctx.commit('loadingGet', false)
+        },
+
+        async save (ctx, data) {
+            ctx.commit('loadingSave', true)
+
+            try {
+                const formData = new FormData()
+                formData.append('data', JSON.stringify(data.fields))
+
+                let addition = data.id ? `/${data.id}` : ''
+
+                const res = await fetch(`${url}/schedules${addition}`, {
+                    method: data.id ? 'put' : 'post',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    },
+                    body: formData
+                })
+
+                if (res.ok) {
+                    await ctx.dispatch('getList')
+
+                    ctx.commit('notice', {
+                        type: 'success',
+                        text: 'Событие успешно сохранено'
+                    }, { root: true })
+
+                    router.push(`/events/${data.fields.event}/schedule`)
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('loadingSave', false)
+        },
+
+        async remove (ctx, data) {
+            ctx.commit('loadingGet', true)
+
+            try {
+                const res = await fetch(`${url}/schedules/${data.id}`, {
+                    method: 'delete',
+                    headers: {
+                        Authorization: 'Bearer ' + VueCookies.get('token')
+                    },
+                })
+
+                if (res.ok) {
+                    ctx.commit('notice', {
+                        type: 'success',
+                        text: 'Запись удалена'
+                    }, { root: true })
+
+                    router.push(`/events/${data.eventId}/schedule`)
+                }
+            } catch (err) {
+                console.error('err: ', err)
+            }
+
+            ctx.commit('loadingGet', false)
         }
     }
 }

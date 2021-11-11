@@ -1,12 +1,15 @@
 <script setup>
 import Table from '../../../components/Table.vue'
 import Icon from '../../../components/Icon.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import moment from 'moment/min/moment-with-locales'
 
 const store = useStore()
 const isLoading = computed(() => store.state.events.isLoading)
+
+const loading = store.state.events.loading
+
 const list = computed(() => {
     const _list = store.state.events.list
 
@@ -39,16 +42,20 @@ const columns = [
     { label: 'Начало', key: 'startDate', type: 'datetime' },
     { label: 'Участники', key: 'participants' },
 ]
+
+onMounted(() => {
+    store.dispatch('events/getList')
+})
 </script>
 
 <template>
 <div>
-    <div v-if="isLoading" class="w-full h-full flex items-center justify-center">
+    <div v-if="loading.get" class="w-full h-full flex items-center justify-center">
         <Icon icon="loader" class="w-16 h-16 text-blue-500 animate-spin" />
     </div>
 
     <Table :columns="columns" :data="list" edit="events"
-        v-if="!isLoading"
+        v-if="!loading.get"
     />
 </div>
 </template>

@@ -14,7 +14,6 @@ const isLoading = computed(() => store.state.events.categories.isLoading)
 const list = computed(() => {
     return store.state.events.categories.list && store.state.events.categories.list.map(i => ({
         name: i.name,
-        // schedules: i.schedules.length,
         id: i.id
     }))
 })
@@ -30,6 +29,11 @@ const create = () => {
 const edit = id => {
     router.push(`/events/categories/${id}`)
 }
+
+onMounted(() => {
+    store.dispatch('events/categories/getList')
+})
+
 </script>
 
 <template>
@@ -69,7 +73,7 @@ const edit = id => {
             <div v-for="item, index in list" :key="index"
                 class="flex justify-between py-3 px-5"
             >
-                <div>
+                <div class="text-sm font-medium">
                     {{ item.name }}
                 </div>
 

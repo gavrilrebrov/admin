@@ -20,6 +20,26 @@ const back = () => {
     store.dispatch('events/getList')
     router.push('/events')
 }
+
+const title = computed(() => {
+    if (route.name === 'events-list') {
+        return 'Мероприятия'
+    } else if  (
+        route.name === 'events-edit' ||
+        route.name === 'events-schedule-list' ||
+        route.name === 'events-schedule-create' ||
+        route.name === 'events-schedule-edit' ||
+        route.name === 'events-participants'
+    ) {
+        return 'Редактирование мероприятия'
+    } else if (
+        route.name === 'events-categories-list' ||
+        route.name === 'events-categories-edit' ||
+        route.name === 'events-categories-create'
+    ) {
+        return 'Категории событий'
+    }
+})
 </script>
 
 <template>
@@ -49,16 +69,8 @@ const back = () => {
                     <Icon icon="arrow-left" class="w-6 text-blue-500" />
                 </button>
 
-                <div v-if="route.name === 'events-list'">
-                    Мероприятия
-                </div>
-
-                <div v-if="(route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-create') && event">
-                    {{ event.name }}
-                </div>
-
-                <div v-if="route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
-                    Категории событий
+                <div>
+                    {{ title }}
                 </div>
             </div>
 
@@ -120,7 +132,7 @@ const back = () => {
                         text-gray-500
                     "
                     :class="{
-                        'text-blue-500 bg-blue-100': route.name === 'events-schedule-list'
+                        'text-blue-500 bg-blue-100': route.name === 'events-schedule-list' || route.name === 'events-schedule-create' || route.name === 'events-schedule-edit'
                     }"
                 >
                     Программа

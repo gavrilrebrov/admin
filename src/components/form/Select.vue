@@ -46,7 +46,7 @@ watch(() => props.modelValue, value => {
                 sm:text-sm
             "
         >
-            <span class="flex items-center">
+            <span class="flex items-center" v-if="selected">
                 <span class="block truncate">{{ selected.label }}</span>
             </span>
 

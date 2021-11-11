@@ -5,12 +5,14 @@ import Notice from '../../../components/Notice.vue'
 import Field from '../../../components/form/Field.vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 const store = useStore()
 const event = computed(() => store.state.events.item)
 const route = useRoute()
 const isLoading = computed(() => store.state.events.isLoading)
+
+const loading = store.state.events.loading
 
 const save = () => {
     store.commit('notice', null)
@@ -31,35 +33,6 @@ const save = () => {
     }
 }
 
-const fields = [
-    [
-        {
-            label: 'Название',
-            slug: 'name',
-            cols: 8
-        },
-        {
-            label: 'Идентификатор',
-            cols: 4,
-            slug: 'slug'
-        }
-    ],
-    [
-        {
-            label: 'Описание',
-            slug: 'description',
-            cols: 8,
-            type: 'editor'
-        },
-        {
-            label: 'Лого',
-            slug: 'logo',
-            cols: 4,
-            type: 'image'
-        }
-    ]
-]
-
 let values = ref({
     name: event.value ? event.value.name : '',
     slug: event.value ? event.value.slug : '',
@@ -78,14 +51,24 @@ watch(event, value => {
         values.value.description = value.description
     }
 })
+
+onMounted(() => {
+    store.dispatch('events/getItem', route.params.eventId)
+})
 </script>
 
 <template>
 <div>
-    <Card>
+    <div v-if="loading.get" class="w-full h-full flex items-center justify-center">
+        <Icon icon="loader" class="w-16 h-16 text-blue-500 animate-spin" />
+    </div>
+
+    <Notice class="mb-4" />
+
+    <Card v-if="!loading.get">
         <template #header>
             <div class="font-medium text-gray-900 text-lg flex-grow">
-                {{ title }}
+                Общяя информация о мероприятии
             </div>
 
             <div>
@@ -108,24 +91,6 @@ watch(event, value => {
                 </button>
             </div>
         </template>
-
-        <Notice class="mb-4" />
-
-        <div class="flex flex-col gap-y-4">
-            <div class="flex gap-x-4"
-                v-for="row, rowIndex in fields"
-                :key="rowIndex"
-            >
-                <div :class="field.cols ? `w-${field.cols}/12` : 'w-full'"
-                    v-for="field, fieldIndex in row" :key="fieldIndex"
-                >
-                    <Field :type="field.type" :items="field.items"
-                        :label="field.label"
-                        v-model="values[field.slug]"
-                    />
-                </div>
-            </div>
-        </div>
     </Card>
 </div>
 </template>
