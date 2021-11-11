@@ -39,3 +39,7 @@ body {
 .button_red {
     @apply bg-red-500
 }
+
+.prose tbody td {
+    border:  1px solid #ccc;
+}

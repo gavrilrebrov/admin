@@ -238,4 +238,32 @@ const props = defineProps(['icon', 'class'])
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
     </svg>
 </div>
+
+<div v-if="icon === 'table'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M13 10v4h6v-4h-6zm-2 0H5v4h6v-4zm2 9h6v-3h-6v3zm-2 0v-3H5v3h6zm2-14v3h6V5h-6zm-2 0H5v3h6V5zm8-2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'add-table'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M13 10v11H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5h-8zm-2 0H5v4h6v-4zm0 9v-3H5v3h6zm2-14v3h6V5h-6zm-2 0H5v3h6V5z" fill="currentColor"/><path d="M19 21v-3h-3v-2h3v-3h2v3h3v2h-3v3h-2z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'delete-table'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M19 10h-6v11H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8h-2v-3zm-8 0H5v4h6v-4zm0 9v-3H5v3h6zm2-14v3h6V5h-6zm-2 0H5v3h6V5z" fill="currentColor"/><path d="M16 18v-2h8v2h-8z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'add-col'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M14 4v8.101a7.018 7.018 0 0 0-2-1.427V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-4c-.033 0-.066 0-.099-.002A7.017 7.017 0 0 0 15.326 20H18V4h-4z" fill="currentColor"/><path d="M14 17a5 5 0 1 1-10 0a5 5 0 0 1 10 0zm-4 3v-2h2v-2h-2v-2H8v2H6v2h2v2h2z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'add-row'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M7 14A5 5 0 1 1 7 4a5 5 0 0 1 0 10zm-3-4h2v2h2v-2h2V8H8V6H6v2H4v2z" fill="currentColor"/><path d="M20 14h-8.101a7.018 7.018 0 0 0 1.427-2H20a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4c0-.033 0-.066.002-.099A7.018 7.018 0 0 0 4 15.326V18h16v-4z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'delete-col'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M6 4v16h2.674c.355.749.84 1.424 1.425 1.998A2.015 2.015 0 0 1 10 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6.674a7.018 7.018 0 0 0-2 1.427V4H6z" fill="currentColor"/><path d="M10 17c0-1.636.786-3.088 2-4a5 5 0 1 1-2 4zm2 1h6v-2h-6v2z" fill="currentColor"/></g></svg>
+</div>
+
+<div v-if="icon === 'delete-row'">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M20 6H4v4h8.101a7.018 7.018 0 0 0-1.427 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4c0 .033 0 .066-.002.099A7.017 7.017 0 0 0 20 8.674V6z" fill="currentColor"/><path d="M20.85 11.81A4.99 4.99 0 0 0 17 10a4.993 4.993 0 0 0-4 2a5 5 0 1 0 7.851-.19zM20 14v2h-6v-2h6z" fill="currentColor"/></g></svg>
+</div>
 </template>
