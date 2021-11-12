@@ -162,8 +162,6 @@ export default {
 
                 const json = await res.json()
 
-                console.log('item: ', json)
-
                 ctx.commit('item', json)
             } catch (err) {
                 console.error('err: ', err)
