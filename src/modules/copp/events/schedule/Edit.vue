@@ -50,15 +50,23 @@ const fields = ref({
     endDate: null,
     category: null,
     organizer: '',
-    event: +route.params.eventId
+    event: +route.params.eventId,
+    registration: false,
 })
+
+const confs = ref([])
 
 const save = () => {
     store.dispatch('events/schedules/save', {
         id: +route.params.scheduleId,
         fields: fields.value,
+        confs: confs.value
     })
 }
+
+const confTypes = [
+    { label: 'ZOOM', value: 'zoom' },
+]
 
 onMounted(async () => {
     store.commit('notice', null)
@@ -74,6 +82,11 @@ watch(item, value => {
         fields.value.endDate = value.endDate
         fields.value.category = value.category ? value.category.id : null
         fields.value.organizer = value.organizer
+        fields.value.registration = value.registration
+
+        if (value.conferences.length > 0) {
+            confs.value = value.conferences
+        }
     }
 })
 
@@ -82,6 +95,19 @@ const remove = () => {
         id: +route.params.scheduleId,
         eventId: +route.params.eventId
     })
+}
+
+const addConf = () => {
+    confs.value.push({
+        link: '',
+        type: 'zoom',
+        code: '',
+        identifier: '',
+    })
+}
+
+const dropConf = (index) => {
+    confs.value.splice(index, 1)
 }
 </script>
 
@@ -136,9 +162,47 @@ const remove = () => {
                     <Field label="Конец" v-model="fields.endDate" type="datetime" />
                 </div>
 
-                <div class="w-8/12">
+                <div class="w-6/12">
                     <Field label="Организатор" v-model="fields.organizer" />
                 </div>
+
+                <div class="w-2/12">
+                    <Field label="Доступно для регистрации" v-model="fields.registration" type="toggle" />
+                </div>
+            </div>
+
+            <div>
+                <div v-if="confs.length > 0" class="mb-4">
+                    <div v-for="conf, confIndex in confs" :key="confIndex"
+                        class="flex gap-x-4 items-end"
+                    >
+                        <Field type="select" :items="confTypes" v-model="conf.type" label="Платформа"
+                            class="w-2/12"
+                        />
+
+                        <Field v-model="conf.link" label="Ссылка"
+                            class="w-4/12"
+                         />
+
+                        <Field v-model="conf.identifier" label="Идентификатор" />
+
+                        <Field v-model="conf.code" label="Код доступа" />
+
+                        <button class="button button_red h-9"
+                            @click="dropConf(confIndex)"
+                        >
+                            <Icon icon="x" class="w-5 h-5" />
+                        </button>
+                    </div>
+                </div>
+
+                <button class="flex text-sm items-center gap-x-2 font-semibold text-blue-500"
+                    @click="addConf"
+                    v-if="confs.length === 0"
+                >
+                    <Icon icon="zoom" class="w-6 h-6" />
+                    <span>Добавить конференцию</span>
+                </button>
             </div>
 
             <div>

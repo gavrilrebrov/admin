@@ -5,6 +5,7 @@ import Editor from './Editor.vue'
 import Select from './Select.vue'
 import Datepicker from './Datepicker.vue'
 import ImageUploader from './ImageUploader.vue'
+import Toggle from './Toggle.vue'
 
 const props = defineProps(['modelValue', 'label', 'type', 'items', 'size'])
 
@@ -27,13 +28,15 @@ watch(() => props.modelValue, value => {
         {{ props.label }}
     </div>
 
-    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime'" :type="props.type" v-model="modelValue" />
+    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime' && type !== 'toggle'" :type="props.type" v-model="modelValue" />
 
     <Editor :size="size" v-if="type === 'editor'" v-model="modelValue" />
 
     <Select :size="size" v-if="type === 'select'" :items="items" v-model="modelValue" />
 
     <Datepicker :size="size" v-if="type === 'daterange' || type === 'datetime' || type === 'date'" :type="type" v-model="modelValue" />
+
+    <Toggle v-if="type === 'toggle'" v-model="modelValue" />
 
     <!-- <ImageUpoader :size="size" v-if="type === 'image'" v-model="modelValue" /> -->
 </div>

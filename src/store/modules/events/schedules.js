@@ -66,7 +66,7 @@ export default {
 
                     if (zoom) zoom = {
                         link: zoom.link,
-                        code: zom.code,
+                        code: zoom.code,
                         identifier: zoom.identifier
                     }
 
@@ -89,6 +89,7 @@ export default {
                             organizer: schedule.organizer,
                             zoom,
                             youtube,
+                            registration: schedule.registration,
                         }]
                     })
                 } else {
@@ -100,6 +101,7 @@ export default {
                         organizer: schedule.organizer,
                         zoom,
                         youtube,
+                        registration: schedule.registration,
                     })
                 }
             }
@@ -160,6 +162,8 @@ export default {
 
                 const json = await res.json()
 
+                console.log('item: ', json)
+
                 ctx.commit('item', json)
             } catch (err) {
                 console.error('err: ', err)
@@ -186,6 +190,51 @@ export default {
                 })
 
                 if (res.ok) {
+                    const item = await res.json()
+
+                    if (data.confs.length === 0) {
+                        for (let c in item.conferences) {
+                            let itemConf = item.conferences[c]
+
+                            let itemConfRes = await fetch(`${url}/conferences/${itemConf.id}`, {
+                                method: 'delete',
+                                headers: {
+                                    Authorization: 'Bearer ' + VueCookies.get('token')
+                                },
+                            })
+                        }
+                    }
+
+                    for (let i in data.confs) {
+                        let conf = data.confs[i]
+
+                        let confData = new FormData()
+                        confData.append('data', JSON.stringify({
+                            schedule: item.id,
+                            link: conf.link,
+                            type: conf.type,
+                            code: conf.code,
+                            identifier: conf.identifier,
+                        }))
+
+                        let confAddition = conf.id ? `/${conf.id}` : ''
+
+                        let confRes = await fetch(`${url}/conferences${confAddition}`, {
+                            method: conf.id ? 'put' : 'post',
+                            headers: {
+                                Authorization: 'Bearer ' + VueCookies.get('token')
+                            },
+                            body: confData
+                        })
+
+                        if (confRes.ok) {
+                            let confItem = await confRes.json()
+                        }
+                    }
+
+                    const confFormData = new FormData()
+                    formData.append('data', JSON.stringify(data.confs))
+
                     await ctx.dispatch('getList')
 
                     ctx.commit('notice', {

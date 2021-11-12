@@ -117,6 +117,20 @@ onMounted(() => store.dispatch('events/schedules/getList', route.params.eventId)
                             >
                                 {{ item.category }}
                             </div>
+
+                            <div v-if="item.registration"
+                                class="inline-flex
+                                    text-xs
+                                    font-semibold
+                                    bg-green-100
+                                    text-green-500
+                                    px-2
+                                    py-1
+                                    rounded
+                                "
+                            >
+                                 Доступно для регистрации
+                            </div>
                         </div>
 
                         <div class="flex flex-col gap-y-2 w-1/12">
