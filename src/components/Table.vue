@@ -122,17 +122,23 @@ const onDownload = (e, id) => {
                                 gap-y-1
                             "
                         >
-                            <div class="inline-flex gap-x-2 items-center">
+                            <div class="inline-flex gap-x-2 items-center"
+                                v-if="item[col.key].phone"
+                            >
                                 <Icon icon="phone" class="w-4 text-blue-500" />
                                 <a :href="`tel:+7${item[col.key].phone}`">+7{{ item[col.key].phone }}</a>
                             </div>
 
-                            <div class="inline-flex gap-x-2 items-center">
+                            <div class="inline-flex gap-x-2 items-center"
+                                v-if="item[col.key].email"
+                            >
                                 <Icon icon="at-symbol" class="w-4 text-blue-500" />
                                 <a :href="`mailto:${item[col.key].email}`">{{ item[col.key].email }}</a>
                             </div>
 
-                            <div class="inline-flex gap-x-2 items-center">
+                            <div class="inline-flex gap-x-2 items-center"
+                                v-if="item[col.key].address"
+                            >
                                 <Icon icon="location-marker" class="w-4 text-blue-500" />
                                 <span>{{ item[col.key].address }}</span>
                             </div>
@@ -167,6 +173,7 @@ const onDownload = (e, id) => {
                         <div v-if="col.type === 'link'">
                             <a :href="item[col.key]" target="_blank"
                                 class="text-blue-500"
+                                v-if="!item[col.key].text"
                             >{{ item[col.key] }}</a>
                         </div>
                     </td>

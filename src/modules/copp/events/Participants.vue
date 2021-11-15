@@ -1,5 +1,5 @@
 <template>
 <div>
-    Participants
+    <router-view />
 </div>
 </template>

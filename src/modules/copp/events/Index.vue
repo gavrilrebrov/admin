@@ -1,7 +1,10 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
+
 import Icon from '../../../components/Icon.vue'
 
 const route = useRoute()
@@ -14,6 +17,8 @@ const count = computed(() => {
         return store.state.events.count
     } else if (route.name === 'events-categories-list') {
         return store.state.events.categories.count
+    } else if (route.name === 'events-participants-list') {
+        return store.state.events.participants.count
     }
 })
 const back = () => {
@@ -29,7 +34,7 @@ const title = computed(() => {
         route.name === 'events-schedule-list' ||
         route.name === 'events-schedule-create' ||
         route.name === 'events-schedule-edit' ||
-        route.name === 'events-participants'
+        route.name === 'events-participants-list'
     ) {
         return 'Редактирование мероприятия'
     } else if (
@@ -39,6 +44,25 @@ const title = computed(() => {
     ) {
         return 'Категории событий'
     }
+})
+
+let page = ref(1)
+const offset = 50
+let totalPages = computed(() => {
+    let pages = 0
+
+    pages = Math.floor(count.value / offset)
+
+    if (count.value % offset) {
+        pages++
+    }
+
+    return pages
+})
+
+watch(page, async value => {
+    store.commit('events/participants/filter', { key: 'page', value })
+    store.dispatch('events/participants/getList', route.params.eventId)
 })
 </script>
 
@@ -74,7 +98,7 @@ const title = computed(() => {
                 </div>
             </div>
 
-            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list'"
+            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-participants-list'"
                 class="
                     flex-grow
                     text-sm
@@ -82,6 +106,14 @@ const title = computed(() => {
                 "
             >
                 Найдено записей: {{ count }}
+            </div>
+
+            <div v-if="route.name === 'events-participants-list' && count > 50">
+                <VPagination
+                    v-model="page"
+                    :pages="totalPages"
+                    :range-size="1"
+                />
             </div>
 
             <div class="inline-flex gap-x-2" v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
@@ -149,7 +181,7 @@ const title = computed(() => {
                         text-gray-500
                     "
                     :class="{
-                        'text-blue-500 bg-blue-100': route.name === 'events-participants'
+                        'text-blue-500 bg-blue-100': route.name === 'events-participants-list'
                     }"
                 >
                     Участники

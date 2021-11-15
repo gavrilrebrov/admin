@@ -9,6 +9,7 @@ import ScheduleList from '../../modules/copp/events/schedule/List.vue'
 import ScheduleEdit from '../../modules/copp/events/schedule/Edit.vue'
 import CategoriesList from '../../modules/copp/events/categories/List.vue'
 import CategoriesEdit from '../../modules/copp/events/categories/Edit.vue'
+import ParticipantsList from '../../modules/copp/events/participants/List.vue'
 
 export default {
     path: '/events',
@@ -73,7 +74,13 @@ export default {
                 {
                     path: 'participants',
                     component: EventsParticipants,
-                    name: 'events-participants'
+                    children: [
+                        {
+                            path: '',
+                            component: ParticipantsList,
+                            name: 'events-participants-list'
+                        }
+                    ]
                 },
             ]
         }

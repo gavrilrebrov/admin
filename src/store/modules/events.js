@@ -7,6 +7,7 @@ moment.locale('ru')
 
 import schedules from './events/schedules'
 import categories from './events/categories'
+import participants from './events/participants'
 
 const url = config.apiUrl.copp
 
@@ -15,7 +16,8 @@ export default {
 
     modules: {
         schedules,
-        categories
+        categories,
+        participants,
     },
 
     state () {
