@@ -77,7 +77,8 @@ const teams = computed(() => {
             organization: parts[0].jobPlace,
             id: list[i].id,
             description: parts[0].jobPlace,
-            grade: grade ? grade.value : 0
+            grade: grade ? grade.value : 0,
+            courseNameCP: 'https://copp-sakha.ru'
         })
     }
 
@@ -100,9 +101,10 @@ const columns = [
     { label: '#', key: 'identifier' },
     { label: 'Команда', key: 'name', type: 'description' },
     { label: 'Курс', key: 'courseName' },
-    { label: 'ДЗ-1', key: 'homework1', type: 'file' },
-    { label: 'ДЗ-2', key: 'homework2', type: 'file' },
-    { label: 'ДЗ-3', key: 'homework3', type: 'file' },
+    { label: 'Курс на ЦП', key: 'courseNameCP', type: 'link' },
+    { label: 'ОП-1', key: 'homework1', type: 'file' },
+    { label: 'ОП-2', key: 'homework2', type: 'file' },
+    // { label: 'ДЗ-3', key: 'homework3', type: 'file' },
     { label: 'Баллы', key: 'grade', type: 'input-number' },
 ]
 
@@ -130,9 +132,9 @@ moment.locale('ru')
     </div>
 
     <div v-if="user.role.name === 'proo-expert'">
-        <!-- <button id="saveGrades" @click="save" class="hidden"></button>
-        <Table :columns="columns" :data="teams" v-if="!isLoading"/> -->
-        Оценивание закрыто
+        <button id="saveGrades" @click="save" class="hidden"></button>
+        <Table :columns="columns" :data="teams" v-if="!isLoading"/>
+        <!-- Оценивание закрыто -->
     </div>
 
     <div class="flex flex-col gap-y-5" v-if="user.role.name === 'teams'">

@@ -116,7 +116,7 @@ const print = () => {
                     inline-flex items-center gap-x-5
                 "
             >
-                <a href="/grading.xlsx" class="
+                <a href="/grading2.xlsx" class="
                         bg-green-500
                         inline-flex
                         cursor-pointer

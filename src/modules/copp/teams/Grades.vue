@@ -182,7 +182,7 @@ const setAdditional = (team) => {
                 text-center
                 text-lg
             "
-        >Итоговый протокол экспертной комиссии по оцениванию проектных работ участников регионального этапа проекта «PROопережение»</div>
+        >Итоговый протокол экспертной комиссии по оцениванию проектных работ участников II регионального этапа проекта «PROопережение»</div>
 
         <table class="text-xs mt-5">
             <thead>
@@ -324,7 +324,7 @@ const setAdditional = (team) => {
                 </div>
             </div>
 
-            <div class="flex justify-between">
+            <div class="flex justify-between mt-6">
                 <div class="w-72">
                     Член комиссии
                 </div>
@@ -356,7 +356,7 @@ const setAdditional = (team) => {
                 </div>
             </div>
 
-            <div class="flex justify-between mt-14">
+            <div class="flex justify-between">
                 <div class="w-72">
                     Член комиссии
                 </div>

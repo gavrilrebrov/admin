@@ -163,6 +163,12 @@ const onDownload = (e, id) => {
                         <div v-if="col.type === 'input-number'">
                             <Input v-model="item[col.key]" type="number" />
                         </div>
+
+                        <div v-if="col.type === 'link'">
+                            <a :href="item[col.key]" target="_blank"
+                                class="text-blue-500"
+                            >{{ item[col.key] }}</a>
+                        </div>
                     </td>
 
                     <td class="px-6 text-right flex items-center justify-end"
