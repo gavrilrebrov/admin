@@ -324,22 +324,6 @@ const setAdditional = (team) => {
                 </div>
             </div>
 
-            <div class="flex justify-between mt-6">
-                <div class="w-72">
-                    Член комиссии
-                </div>
-
-                <div>
-                    <div class="text-xs mt-6">
-                        (личная подпись)
-                    </div>
-                </div>
-
-                <div class="w-56 text-right">
-                    М.В. Курнева
-                </div>
-            </div>
-
             <div class="flex justify-between">
                 <div class="w-72">
                     Член комиссии

@@ -1,59 +1,26 @@
 <script setup>
-import Card from '../../../components/Card.vue'
-import Icon from '../../../components/Icon.vue'
-import Notice from '../../../components/Notice.vue'
-import Field from '../../../components/form/Field.vue'
+import Card from '@/components/Card.vue'
+import Icon from '@/components/Icon.vue'
+import Notice from '@/components/Notice.vue'
+import Field from '@/components/form/Field.vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, watch, onMounted } from 'vue'
 
 const store = useStore()
-const event = computed(() => store.state.events.item)
 const route = useRoute()
-const isLoading = computed(() => store.state.events.isLoading)
+const router = useRouter()
 
 const loading = store.state.events.loading
+const event = computed(() => store.state.events.item)
 
-const save = () => {
-    store.commit('notice', null)
+const fields = ref({
+    name: '',
+    slug: '',
+    description: '',
+    active: false,
+    logo: null,
 
-    if (
-        values.value.name === '' ||
-        values.value.slug === ''
-    ) {
-        store.commit('notice', {
-            type: 'error',
-            text: 'Название и идентификатор не могут быть пустыми'
-        })
-    } else {
-        store.dispatch('events/save', {
-            data: values.value,
-            id: route.name === 'events-edit' ? route.params.eventId : null
-        })
-    }
-}
-
-let values = ref({
-    name: event.value ? event.value.name : '',
-    slug: event.value ? event.value.slug : '',
-    description: event.value ? event.value.description : '',
-    // logo: event.value ? event.value.logo : '',
-})
-
-const title = computed(() => {
-    return route.name === 'events-edit' ? 'Редактирование мероприятия' : 'Создание мероприятия'
-})
-
-watch(event, value => {
-    if (value) {
-        values.value.name = value.name
-        values.value.slug = value.slug
-        values.value.description = value.description
-    }
-})
-
-onMounted(() => {
-    store.dispatch('events/getItem', route.params.eventId)
 })
 </script>
 
@@ -91,6 +58,18 @@ onMounted(() => {
                 </button>
             </div>
         </template>
+
+        <div class="flex flex-col gap-y-4">
+            <div class="flex gap-x-4">
+                <div class="w-8/12">
+                    <Field label="Название" v-model="fields.name" />
+                </div>
+
+                <div class="w-4/12">
+                    <Field label="UID" v-model="fields.slug" />
+                </div>
+            </div>
+        </div>
     </Card>
 </div>
 </template>
