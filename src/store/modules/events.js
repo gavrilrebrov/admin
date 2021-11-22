@@ -94,6 +94,8 @@ export default {
                 project: ctx.rootState.user.project,
                 description: data.fields.description,
                 active: data.fields.active,
+                registration: data.fields.registration,
+                youtubeId: data.fields.youtubeId
             }
 
             const item = await http.save(`/events`, fields, data.id)

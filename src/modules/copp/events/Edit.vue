@@ -13,13 +13,15 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-const loading = store.state.events.loading
+const loading = computed(() => store.state.events.loading)
 const event = computed(() => store.state.events.item)
 
 const fields = ref({
     name: '',
     description: '',
     active: false,
+    registration: false,
+    youtubeId: '',
     hero: {
         file: null,
         preview: null,
@@ -40,6 +42,8 @@ watch(event, value => {
         fields.value.name = value.name
         fields.value.description = value.description
         fields.value.active = value.active
+        fields.value.registration = value.registration
+        fields.value.youtubeId = value.youtubeId
 
         if (value.hero) {
             files.value.hero.preview = `${apiUrl}${value.hero.formats.medium.url}`
@@ -91,7 +95,7 @@ const save = () => {
                         gap-x-1
                     "
                     @click="save"
-                    :disabled="loadig.save"
+                    :disabled="loading && loading.save"
                 >
                     <Icon icon="check" class="h-5 w-5" v-if="!loading.save" />
                     <Icon icon="loader" class="h-5 w-5 animate-spin" v-if="loading.save" />
@@ -102,8 +106,14 @@ const save = () => {
 
         <div class="flex flex-col gap-y-4">
             <div class="flex gap-x-4">
-                <div class="w-2/12">
-                    <Field label="Изображение" type="image" v-model="files.hero" />
+                <div class="w-2/12 flex flex-col gap-y-4">
+                    <div>
+                        <Field label="Изображение" type="image" v-model="files.hero" />
+                    </div>
+
+                    <div>
+                        <Field label="ID видео в YouTube" v-model="fields.youtubeId" />
+                    </div>
                 </div>
 
                 <div class="w-10/12 flex flex-col gap-y-4">
@@ -112,8 +122,12 @@ const save = () => {
                             <Field label="Название" v-model="fields.name" />
                         </div>
 
-                        <div>
+                        <div class="w-1/12">
                             <Field label="Активное" v-model="fields.active" type="toggle" />
+                        </div>
+
+                        <div class="w-1/12">
+                            <Field label="Регистрация" v-model="fields.registration" type="toggle" />
                         </div>
                     </div>
 
