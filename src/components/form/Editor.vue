@@ -42,7 +42,7 @@ watch(() => props.modelValue, value => {
 </script>
 
 <template>
-<div class="flex flex-col gap-y-3" v-if="editor">
+<div class="flex flex-col" v-if="editor">
     <div class="flex gap-x-3">
         <div class="rounded-md overflow-hidden">
             <button class="p-2"

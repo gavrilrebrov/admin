@@ -11,9 +11,10 @@ const props = defineProps(['modelValue', 'label', 'type', 'items', 'size'])
 
 let modelValue = ref(props.modelValue)
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'remove'])
 
 watch(modelValue, value => {
+    console.log('value: ', value)
     emit('update:modelValue', value)
 })
 
@@ -28,7 +29,7 @@ watch(() => props.modelValue, value => {
         {{ props.label }}
     </div>
 
-    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime' && type !== 'toggle'" :type="props.type" v-model="modelValue" />
+    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime' && type !== 'toggle' && type !== 'image'" :type="props.type" v-model="modelValue" />
 
     <Editor :size="size" v-if="type === 'editor'" v-model="modelValue" />
 
@@ -38,6 +39,6 @@ watch(() => props.modelValue, value => {
 
     <Toggle v-if="type === 'toggle'" v-model="modelValue" />
 
-    <!-- <ImageUpoader :size="size" v-if="type === 'image'" v-model="modelValue" /> -->
+    <ImageUploader :size="size" v-if="type === 'image'" v-model="modelValue" />
 </div>
 </template>

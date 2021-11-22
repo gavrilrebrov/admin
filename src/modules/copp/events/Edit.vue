@@ -7,6 +7,8 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, watch, onMounted } from 'vue'
 
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:1337'
+
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
@@ -16,12 +18,50 @@ const event = computed(() => store.state.events.item)
 
 const fields = ref({
     name: '',
-    slug: '',
     description: '',
     active: false,
-    logo: null,
+    hero: {
+        file: null,
+        preview: null,
+    },
 
 })
+
+const files = ref({
+    hero: {
+        file: null,
+        preview: null,
+        id: null
+    }
+})
+
+watch(event, value => {
+    if (value) {
+        fields.value.name = value.name
+        fields.value.description = value.description
+        fields.value.active = value.active
+
+        if (value.hero) {
+            files.value.hero.preview = `${apiUrl}${value.hero.formats.medium.url}`
+            files.value.hero.id = value.hero.id
+        }
+    }
+})
+
+onMounted(() => {
+    store.commit('notice', null)
+    if (route.params.eventId) {
+        store.dispatch('events/getItem', route.params.eventId)
+    }
+})
+
+const save = () => {
+    store.dispatch('events/save', {
+        id: route.params.eventId,
+        fields: fields.value,
+        files: files.value
+    })
+}
 </script>
 
 <template>
@@ -51,9 +91,10 @@ const fields = ref({
                         gap-x-1
                     "
                     @click="save"
+                    :disabled="loadig.save"
                 >
-                    <Icon icon="check" class="h-5 w-5" v-if="!isLoading" />
-                    <Icon icon="loader" class="h-5 w-5 animate-spin" v-if="isLoading" />
+                    <Icon icon="check" class="h-5 w-5" v-if="!loading.save" />
+                    <Icon icon="loader" class="h-5 w-5 animate-spin" v-if="loading.save" />
                     <span>Сохранить</span>
                 </button>
             </div>
@@ -61,12 +102,24 @@ const fields = ref({
 
         <div class="flex flex-col gap-y-4">
             <div class="flex gap-x-4">
-                <div class="w-8/12">
-                    <Field label="Название" v-model="fields.name" />
+                <div class="w-2/12">
+                    <Field label="Изображение" type="image" v-model="files.hero" />
                 </div>
 
-                <div class="w-4/12">
-                    <Field label="UID" v-model="fields.slug" />
+                <div class="w-10/12 flex flex-col gap-y-4">
+                    <div class="flex gap-x-4">
+                        <div class="w-8/12">
+                            <Field label="Название" v-model="fields.name" />
+                        </div>
+
+                        <div>
+                            <Field label="Активное" v-model="fields.active" type="toggle" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <Field class="w-full" type="editor" label="Описание" v-model="fields.description" />
+                    </div>
                 </div>
             </div>
         </div>

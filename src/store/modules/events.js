@@ -11,6 +11,8 @@ import participants from './events/participants'
 
 const url = config.apiUrl.copp
 
+import http from '@/store/http'
+
 export default {
     namespaced: true,
 
@@ -66,35 +68,11 @@ export default {
 
             query = qs.stringify(query)
 
-            try {
-                const res = await fetch(`${url}/events?${query}`, {
-                    method: 'get',
-                    headers: {
-                        Authorization: 'Bearer ' + VueCookies.get('token')
-                    }
-                })
+            const list = await http.get(`/events?${query}`)
+            ctx.commit('list', list)
 
-                const json = await res.json()
-
-                const countRes = await fetch(`${url}/events/count?${query}`, {
-                    method: 'get',
-                    headers: {
-                        Authorization: 'Bearer ' + VueCookies.get('token')
-                    }
-                })
-
-                const countJson = await countRes.json()
-
-                if (res.ok) {
-                    ctx.commit('list', json)
-                }
-
-                if (countRes.ok) {
-                    ctx.commit('count', countJson)
-                }
-            } catch (err) {
-                console.error('err: ', err)
-            }
+            const count = await http.get(`/events/count?${query}`)
+            ctx.commit('count', count)
 
             ctx.commit('loadingGet', false)
         },
@@ -102,21 +80,8 @@ export default {
         async getItem (ctx, id) {
             ctx.commit('loadingGet', true)
 
-            try {
-                const res = await fetch(`${url}/events/${id}`, {
-                    method: 'get',
-                    headers: {
-                        Authorization: 'Bearer ' + VueCookies.get('token')
-                    },
-                })
-
-                const json = await res.json()
-
-                ctx.commit('item', json)
-            } catch (err) {
-                console.error('err: ', err)
-            }
-
+            const item = await http.get(`/events/${id}`)
+            ctx.commit('item', item)
 
             ctx.commit('loadingGet', false)
         },
@@ -124,34 +89,31 @@ export default {
         async save (ctx, data) {
             ctx.commit('loadingSave', true)
 
-            try {
-                const formData = new FormData()
-                formData.append('data', JSON.stringify({
-                    name: data.data.name,
-                    project: ctx.rootState.user.project,
-                    slug: data.data.slug,
-                    description: data.data.description,
-                }))
+            const fields = {
+                name: data.fields.name,
+                project: ctx.rootState.user.project,
+                description: data.fields.description,
+                active: data.fields.active,
+            }
 
-                let addition = ''
+            const item = await http.save(`/events`, fields, data.id)
 
-                if (data.id) addition = `/${data.id}`
-
-                const res = await fetch(`${url}/events${addition}`, {
-                    method: data.id ? 'put' : 'post',
-                    headers: {
-                        Authorization: 'Bearer ' + VueCookies.get('token')
-                    },
-                    body: formData
-                })
-
-                if (res.ok) {
-                    await ctx.dispatch('getList')
-
-                    router.push('/events')
+            if (item) {
+                if (data.files) {
+                    for (let key in data.files) {
+                        if (data.files[key].file) {
+                            const file = await http.uploadFile({
+                                ref: 'event',
+                                refId: item.id,
+                                file: data.files[key].file,
+                                field: key,
+                            })
+                        }
+                    }
                 }
-            } catch (err) {
-                console.error('err: ', err)
+
+                await ctx.dispatch('getList')
+                await router.push('/events')
             }
 
             ctx.commit('loadingSave', false)
