@@ -34,7 +34,8 @@ export default {
 
             loading: {
                 get: false,
-                save: false
+                save: false,
+                remove: false,
             }
         }
     },
@@ -58,6 +59,10 @@ export default {
 
         loadingSave (state, value) {
             state.loading.save = value
+        },
+
+        'loading.remove' (state, value) {
+            state.loading.remove = value
         }
     },
 
@@ -124,5 +129,15 @@ export default {
 
             ctx.commit('loadingSave', false)
         },
+
+        async remove (ctx, id) {
+            ctx.commit('loading.remove', true)
+
+            await http.delete(`/events/${id}`)
+
+            router.push(`/events`)
+
+            ctx.commit('loading.remove', false)
+        }
     }
 }

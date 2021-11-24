@@ -50,6 +50,11 @@ export default {
             ]
         },
         {
+            path: 'create',
+            component: EventsEdit,
+            name: 'events-create'
+        },
+        {
             path: ':eventId',
             component: EventsItem,
             children: [

@@ -54,6 +54,7 @@ watch(event, value => {
 
 onMounted(() => {
     store.commit('notice', null)
+
     if (route.params.eventId) {
         store.dispatch('events/getItem', route.params.eventId)
     }
@@ -65,6 +66,14 @@ const save = () => {
         fields: fields.value,
         files: files.value
     })
+}
+
+const remove = () => {
+    const c = confirm('Вы действительно хотите удалить мероприятие?')
+
+    if (c) {
+        store.dispatch('events/remove', route.params.eventId)
+    }
 }
 </script>
 
@@ -136,6 +145,14 @@ const save = () => {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="mt-5" v-if="route.params.eventId">
+            <button class="button button_red" @click="remove">
+                <Icon icon="x" class="w-5 h-5" v-if="!loading.remove" />
+                <Icon icon="loader" class="w-5 h-5 animate-spin" v-if="loading.remove" />
+                <span>Удалить</span>
+            </button>
         </div>
     </Card>
 </div>

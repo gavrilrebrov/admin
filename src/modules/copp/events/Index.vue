@@ -51,6 +51,8 @@ const title = computed(() => {
         route.name === 'events-categories-create'
     ) {
         return 'Категории событий'
+    } else if (route.name === 'events-create') {
+        return 'Новое мероприятие'
     }
 })
 </script>
@@ -98,6 +100,12 @@ const title = computed(() => {
             </div>
 
             <div class="inline-flex gap-x-2" v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
+                <router-link to="/events/create"
+                    class="py-2 px-3 text-sm rounded font-semibold bg-blue-500 text-white mr-5"
+                >
+                    Создать мероприятие
+                </router-link>
+
                 <router-link :to="`/events`" class="py-2 px-3 text-sm rounded font-semibold text-gray-500"
                     :class="{ 'text-blue-500 bg-blue-100': route.name === 'events-list' }"
                 >
@@ -115,7 +123,7 @@ const title = computed(() => {
                     inline-flex
                     gap-x-2
                 "
-                v-if="route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-create' && route.name !== 'events-categories-edit'"
+                v-if="route.name !== 'events-list' && route.name !== 'events-categories-list' && route.name !== 'events-categories-create' && route.name !== 'events-categories-edit' && route.name !== 'events-create'"
             >
                 <router-link
                     :to="`/events/${route.params.eventId}`"
