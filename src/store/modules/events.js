@@ -9,6 +9,7 @@ import schedules from './events/schedules'
 import categories from './events/categories'
 import participants from './events/participants'
 import videos from './events/videos'
+import vacancies from './events/vacancies'
 
 const url = config.apiUrl.copp
 
@@ -22,6 +23,7 @@ export default {
         categories,
         participants,
         videos,
+        vacancies
     },
 
     state () {

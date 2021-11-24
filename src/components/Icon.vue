@@ -266,4 +266,8 @@ const props = defineProps(['icon', 'class'])
 <div v-if="icon === 'delete-row'">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" :class="class" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M20 6H4v4h8.101a7.018 7.018 0 0 0-1.427 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4c0 .033 0 .066-.002.099A7.017 7.017 0 0 0 20 8.674V6z" fill="currentColor"/><path d="M20.85 11.81A4.99 4.99 0 0 0 17 10a4.993 4.993 0 0 0-4 2a5 5 0 1 0 7.851-.19zM20 14v2h-6v-2h6z" fill="currentColor"/></g></svg>
 </div>
+
+<div v-if="icon === 'cloud-download'">
+    <svg xmlns="http://www.w3.org/2000/svg" :class="class" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" /></svg>
+</div>
 </template>

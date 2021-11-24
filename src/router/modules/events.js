@@ -6,6 +6,7 @@ import EventsSchedule from '../../modules/copp/events/Schedule.vue'
 import EventsParticipants from '../../modules/copp/events/Participants.vue'
 import EventsCategories from '../../modules/copp/events/Categories.vue'
 import EventsVideos from '@/modules/copp/events/videos/index.vue'
+import EventsVacancies from '@/modules/copp/events/vacancies/index.vue'
 
 import ScheduleList from '../../modules/copp/events/schedule/List.vue'
 import ScheduleEdit from '../../modules/copp/events/schedule/Edit.vue'
@@ -15,6 +16,8 @@ import ParticipantsList from '../../modules/copp/events/participants/List.vue'
 
 import VideosList from '@/modules/copp/events/videos/list.vue'
 import VideosEdit from '@/modules/copp/events/videos/edit.vue'
+
+import VacanciesList from '@/modules/copp/events/vacancies/list.vue'
 
 export default {
     path: '/events',
@@ -105,6 +108,17 @@ export default {
                             path: ':videoId',
                             component: VideosEdit,
                             name: 'events-videos-edit'
+                        }
+                    ]
+                },
+                {
+                    path: 'vacancies',
+                    component: EventsVacancies,
+                    children: [
+                        {
+                            path: '',
+                            component: VacanciesList,
+                            name: 'events-vacancies-list'
                         }
                     ]
                 }

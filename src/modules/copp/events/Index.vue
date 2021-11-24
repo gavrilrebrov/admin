@@ -21,6 +21,8 @@ const count = computed(() => {
         return store.state.events.participants.count
     } else if (route.name === 'events-videos-list') {
         return store.state.events.videos.count
+    } else if (route.name === 'events-vacancies-list') {
+        return store.state.events.vacancies.count
     }
 })
 const back = () => {
@@ -39,7 +41,8 @@ const title = computed(() => {
         route.name === 'events-participants-list' ||
         route.name === 'events-videos-list' ||
         route.name === 'events-videos-create' ||
-        route.name === 'events-videos-edit'
+        route.name === 'events-videos-edit' ||
+        route.name === 'events-vacancies-list'
     ) {
         return 'Редактирование мероприятия'
     } else if (
@@ -84,7 +87,7 @@ const title = computed(() => {
                 </div>
             </div>
 
-            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-participants-list' || route.name === 'events-videos-list'"
+            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-participants-list' || route.name === 'events-videos-list' || route.name === 'events-vacancies-list'"
                 class="
                     flex-grow
                     text-sm
@@ -180,6 +183,23 @@ const title = computed(() => {
                     }"
                 >
                     Видео
+                </router-link>
+
+                <router-link
+                    :to="`/events/${route.params.eventId}/vacancies`"
+                    class="
+                        py-2
+                        px-3
+                        text-sm
+                        rounded
+                        font-semibold
+                        text-gray-500
+                    "
+                    :class="{
+                        'text-blue-500 bg-blue-100': route.name === 'events-vacancies-list'
+                    }"
+                >
+                    Вакансии
                 </router-link>
             </div>
         </div>
