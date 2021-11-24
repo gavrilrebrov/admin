@@ -5,6 +5,8 @@ import qs from 'query-string'
 
 import { useRoute } from 'vue-router'
 
+import http from '@/store/http'
+
 export default {
     namespaced: true,
 
@@ -15,6 +17,7 @@ export default {
 
             loading: {
                 get: false,
+                export: false,
             },
 
             filter: {
@@ -40,6 +43,10 @@ export default {
 
         filter (state, value) {
             state.filter[value.key] = value.value
+        },
+
+        'loading.export' (state, value) {
+            state.loading.export = value
         }
     },
 
@@ -49,7 +56,7 @@ export default {
 
             let query = {
                 event: eventId,
-                _sort: 'created_at:ASC',
+                _sort: 'created_at:DESC',
                 _limit: ctx.state.filter.limit,
             }
 
@@ -88,6 +95,14 @@ export default {
             }
 
             ctx.commit('loadingGet', false)
+        },
+
+        async 'export.excel' (ctx, eventId) {
+            ctx.commit('loading.export', true)
+
+            await http.downloadFile(`/participants/export/${eventId}`)
+
+            ctx.commit('loading.export', false)
         }
     }
 }

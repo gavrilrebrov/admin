@@ -46,7 +46,7 @@ watch(event, value => {
         fields.value.youtubeId = value.youtubeId
 
         if (value.hero) {
-            files.value.hero.preview = `${apiUrl}${value.hero.formats.medium.url}`
+            files.value.hero.preview = `${apiUrl}${value.hero.url}`
             files.value.hero.id = value.hero.id
         }
     }

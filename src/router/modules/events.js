@@ -5,11 +5,16 @@ import EventsEdit from '../../modules/copp/events/Edit.vue'
 import EventsSchedule from '../../modules/copp/events/Schedule.vue'
 import EventsParticipants from '../../modules/copp/events/Participants.vue'
 import EventsCategories from '../../modules/copp/events/Categories.vue'
+import EventsVideos from '@/modules/copp/events/videos/index.vue'
+
 import ScheduleList from '../../modules/copp/events/schedule/List.vue'
 import ScheduleEdit from '../../modules/copp/events/schedule/Edit.vue'
 import CategoriesList from '../../modules/copp/events/categories/List.vue'
 import CategoriesEdit from '../../modules/copp/events/categories/Edit.vue'
 import ParticipantsList from '../../modules/copp/events/participants/List.vue'
+
+import VideosList from '@/modules/copp/events/videos/list.vue'
+import VideosEdit from '@/modules/copp/events/videos/edit.vue'
 
 export default {
     path: '/events',
@@ -82,6 +87,27 @@ export default {
                         }
                     ]
                 },
+                {
+                    path: 'videos',
+                    component: EventsVideos,
+                    children: [
+                        {
+                            path: '',
+                            component: VideosList,
+                            name: 'events-videos-list'
+                        },
+                        {
+                            path: 'create',
+                            component: VideosEdit,
+                            name: 'events-videos-create'
+                        },
+                        {
+                            path: ':videoId',
+                            component: VideosEdit,
+                            name: 'events-videos-edit'
+                        }
+                    ]
+                }
             ]
         }
     ]

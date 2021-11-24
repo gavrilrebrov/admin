@@ -3,6 +3,8 @@ import config from '../../../config.json'
 import VueCookies from 'vue-cookies'
 import router from '../../../router'
 
+import http from '@/store/http'
+
 const url = config.apiUrl.copp
 
 export default {
@@ -22,6 +24,7 @@ export default {
             loading: {
                 get: false,
                 save: false,
+                remove: false,
             },
         }
     },
@@ -60,6 +63,10 @@ export default {
         loadingSave (state, value) {
             state.loading.save = value
         },
+
+        'loading.remove' (state, value) {
+            state.loading.remove = value
+        }
     },
 
     actions: {
@@ -157,6 +164,16 @@ export default {
             }
 
             ctx.commit('loadingSave', false)
+        },
+
+        async remove (ctx, data) {
+            ctx.commit('loading.remove', true)
+
+            await http.delete(`/categories/${data.id}`)
+
+            router.push(`/events/categories`)
+
+            ctx.commit('loading.remove', false)
         }
     }
 }

@@ -4,6 +4,8 @@ import Icon from '@/components/Icon.vue'
 import Table from '@/components/Table.vue'
 import Field from '@/components/form/Field.vue'
 
+import VPagination from "@hennge/vue3-pagination"
+
 import { useStore } from 'vuex'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -72,12 +74,55 @@ watch(selectedSchedule, value => {
     store.commit('events/participants/filter', { key: 'page', value: 1 })
     store.dispatch('events/participants/getList', route.params.eventId)
 })
+
+const count = computed(() => {
+    return store.state.events.participants.count
+})
+
+let page = ref(1)
+const offset = 50
+let totalPages = computed(() => {
+    let pages = 0
+
+    pages = Math.floor(count.value / offset)
+
+    if (count.value % offset) {
+        pages++
+    }
+
+    return pages
+})
+
+watch(page, async value => {
+    store.commit('events/participants/filter', { key: 'page', value })
+    store.dispatch('events/participants/getList', route.params.eventId)
+})
+
+let exportExcel = () => {
+    store.dispatch('events/participants/export.excel', route.params.eventId)
+}
 </script>
 
 <template>
 <div>
     <div class="grid grid-cols-2 mb-5 gap-x-5 items-end">
         <Field label="Событие" type="select" :items="schedules" v-model="selectedSchedule" />
+
+        <div v-if="count > 50" class="mb-1">
+            <VPagination
+                v-model="page"
+                :pages="totalPages"
+                :range-size="1"
+            />
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <button class="button button_green" @click="exportExcel()" :disabled="loading.export">
+            <Icon icon="excel" class="w-5" v-if="!loading.export" />
+            <Icon icon="loader" class="w-5 h-5 text-white animate-spin" v-if="loading.export" />
+            <div>Выгрузить</div>
+        </button>
     </div>
 
     <div v-if="loading.get" class="

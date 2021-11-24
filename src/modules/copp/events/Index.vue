@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
-import VPagination from "@hennge/vue3-pagination"
+// import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
 import Icon from '../../../components/Icon.vue'
@@ -19,6 +19,8 @@ const count = computed(() => {
         return store.state.events.categories.count
     } else if (route.name === 'events-participants-list') {
         return store.state.events.participants.count
+    } else if (route.name === 'events-videos-list') {
+        return store.state.events.videos.count
     }
 })
 const back = () => {
@@ -34,7 +36,10 @@ const title = computed(() => {
         route.name === 'events-schedule-list' ||
         route.name === 'events-schedule-create' ||
         route.name === 'events-schedule-edit' ||
-        route.name === 'events-participants-list'
+        route.name === 'events-participants-list' ||
+        route.name === 'events-videos-list' ||
+        route.name === 'events-videos-create' ||
+        route.name === 'events-videos-edit'
     ) {
         return 'Редактирование мероприятия'
     } else if (
@@ -44,25 +49,6 @@ const title = computed(() => {
     ) {
         return 'Категории событий'
     }
-})
-
-let page = ref(1)
-const offset = 50
-let totalPages = computed(() => {
-    let pages = 0
-
-    pages = Math.floor(count.value / offset)
-
-    if (count.value % offset) {
-        pages++
-    }
-
-    return pages
-})
-
-watch(page, async value => {
-    store.commit('events/participants/filter', { key: 'page', value })
-    store.dispatch('events/participants/getList', route.params.eventId)
 })
 </script>
 
@@ -98,7 +84,7 @@ watch(page, async value => {
                 </div>
             </div>
 
-            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-participants-list'"
+            <div v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-participants-list' || route.name === 'events-videos-list'"
                 class="
                     flex-grow
                     text-sm
@@ -106,14 +92,6 @@ watch(page, async value => {
                 "
             >
                 Найдено записей: {{ count }}
-            </div>
-
-            <div v-if="route.name === 'events-participants-list' && count > 50">
-                <VPagination
-                    v-model="page"
-                    :pages="totalPages"
-                    :range-size="1"
-                />
             </div>
 
             <div class="inline-flex gap-x-2" v-if="route.name === 'events-list' || route.name === 'events-categories-list' || route.name === 'events-categories-create' || route.name === 'events-categories-edit'">
@@ -185,6 +163,23 @@ watch(page, async value => {
                     }"
                 >
                     Участники
+                </router-link>
+
+                <router-link
+                    :to="`/events/${route.params.eventId}/videos`"
+                    class="
+                        py-2
+                        px-3
+                        text-sm
+                        rounded
+                        font-semibold
+                        text-gray-500
+                    "
+                    :class="{
+                        'text-blue-500 bg-blue-100': route.name === 'events-videos-list' || route.name === 'events-videos-create' || route.name === 'events-videos-edit'
+                    }"
+                >
+                    Видео
                 </router-link>
             </div>
         </div>

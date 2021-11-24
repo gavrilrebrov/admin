@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
-import Card from '@/components/Card.vue'
 import Icon from '@/components/Icon.vue'
+import Card from '@/components/Card.vue'
 import Notice from '@/components/Notice.vue'
 import Field from '@/components/form/Field.vue'
 
@@ -12,46 +12,49 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-const back = () => {
-    router.push('/events/categories')
-}
+const back = () => router.push(`/events/${route.params.eventId}/videos`)
 
-const loading = store.state.events.categories.loading
-const item = computed(() => store.state.events.categories.item)
+const loading = computed(() => store.state.events.videos.loading)
+const item = computed(() => store.state.events.videos.item)
 
 const title = computed(() => {
-    return route.name === 'events-categories-edit' ? 'Редактирование категории' : 'Создание категории'
-})
-
-const save = () => {
-    store.dispatch('events/categories/save', {
-        id: route.params.categoryId,
-        fields: fields.value,
-    })
-}
-
-const fields = ref({
-    name: ''
+    return route.name === 'events-videos-edit' ? 'Редактирование видео' : 'Создание видео'
 })
 
 onMounted(() => {
     store.commit('notice', null)
-    if (route.params.categoryId) {
-        store.dispatch('events/categories/getItem', route.params.categoryId)
+
+    if (route.params.videoId) {
+        store.dispatch('events/videos/item.get', route.params.videoId)
     }
 })
+
+const fields = ref({
+    title: '',
+    identifier: '',
+})
+
+const save = () => {
+    store.dispatch('events/videos/save', {
+        id: route.params.videoId,
+        fields: fields.value,
+        eventId: route.params.eventId,
+    })
+}
+
+const remove = () => {
+    store.dispatch('events/videos/remove', {
+        id: route.params.videoId,
+        eventId: route.params.eventId
+    })
+}
 
 watch(item, value => {
     if (value) {
-        fields.value.name = value.name
+        fields.value.title = value.title
+        fields.value.identifier = value.identifier
     }
 })
-
-const remove = () => {
-    store.dispatch('events/categories/remove', {
-        id: route.params.categoryId,
-    })
-}
 </script>
 
 <template>
@@ -73,11 +76,9 @@ const remove = () => {
             </div>
 
             <div>
-                <button class="button" @click="save"
-                    :disabled="loading.save"
-                >
+                <button class="button" @click="save" :disabled="loading.save">
                     <Icon icon="check" class="w-5 h-5" v-if="!loading.save" />
-                    <Icon icon="loader" class="h-5 w-5 animate-spin" v-if="loading.save" />
+                    <Icon icon="loader" class="w-5 h-5 animate-spin" v-if="loading.save" />
                     <span>Сохранить</span>
                 </button>
             </div>
@@ -85,11 +86,17 @@ const remove = () => {
 
         <Notice />
 
-        <div class="w-1/2">
-            <Field label="Название" v-model="fields.name" />
+        <div class="flex gap-x-4">
+            <div class="w-1/2">
+                <Field label="Заголовок" v-model="fields.title" />
+            </div>
+
+            <div class="w-1/2">
+                <Field label="Идентификатор ролика в YouTube" v-model="fields.identifier" />
+            </div>
         </div>
 
-        <div class="mt-5" v-if="route.params.categoryId">
+        <div class="mt-5" v-if="route.params.videoId">
             <button class="button button_red" @click="remove">
                 <Icon icon="x" class="w-5 h-5" v-if="!loading.remove" />
                 <Icon icon="loader" class="w-5 h-5 animate-spin" v-if="loading.remove" />
