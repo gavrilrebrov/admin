@@ -124,7 +124,7 @@ const save = () => {
                     </td>
 
                     <td class="py-2 px-4 font-semibold text-sm border">
-                        <a :href="team.homework1.url" v-if="team.homework1"
+                        <a :href="`https://api.copp14.ru${team.homework1.url}`" v-if="team.homework1" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
                         >
                             {{ team.homework1.name }}
@@ -132,7 +132,7 @@ const save = () => {
                     </td>
 
                     <td class="py-2 px-4 font-semibold text-sm border">
-                        <a :href="team.homework2.url" v-if="team.homework2" target="_blank"
+                        <a :href="`https://api.copp14.ru${team.homework2.url}`"  v-if="team.homework2" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
                         >
                             {{ team.homework2.name }}
@@ -146,13 +146,13 @@ const save = () => {
                     </td>
 
                     <td class="py-2 px-4 font-semibold text-sm border">
-                        <a :href="team.homework3.url" v-if="team.homework3" target="_blank"
+                        <a :href="`https://api.copp14.ru${team.homework3.url}`"  v-if="team.homework3" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
                         >
                             {{ team.homework3.name }}
                         </a>
 
-                        <a :href="team.homework4.url" v-if="team.homework4" target="_blank"
+                        <a :href="`https://api.copp14.ru${team.homework4.url}`"  v-if="team.homework4" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs mt-3"
                         >
                             {{ team.homework4.name }}
