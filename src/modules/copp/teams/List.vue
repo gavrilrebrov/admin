@@ -4,16 +4,48 @@ import { computed } from 'vue'
 
 import Icon from '@/components/Icon.vue'
 import Card from '@/components/Card.vue'
+import Table from '@/components/Table.vue'
+import Input from '@/components/form/Input.vue'
 
 const store = useStore()
 
 const isLoading = computed(() => store.state.teams.isLoading)
 const user = computed(() => store.state.user)
 
-const teams = computed(() => store.state.teams.list)
+const teams = computed(() => {
+    let list = store.state.teams.list
+
+    let output = []
+
+    for (let i in list) {
+        let item = list[i]
+
+        let grade = item.grades.find(g => g.expert === user.value.id)
+
+        output.push({
+            id: item.id,
+            name: item.name,
+            participants: item.participants,
+            homework1: item.homework1,
+            homework2: item.homework2,
+            homework3: item.homework3,
+            video: item.courseName,
+            grade1: grade ? grade.grade1 : 0,
+            grade2: grade ? grade.grade2 : 0,
+            grade3: grade ? grade.grade3 : 0,
+            grade4: grade ? grade.grade4 : 0,
+        })
+    }
+
+    return output
+})
 
 const downloadDocuments = id => {
     store.dispatch('teams/downloadDocuments', id)
+}
+
+const save = () => {
+    store.dispatch('teams/saveGrades', teams.value)
 }
 </script>
 
@@ -26,6 +58,117 @@ const downloadDocuments = id => {
         "
     >
         <Icon icon="loader" class="w-16 h-16 text-blue-500 animate-spin" />
+    </div>
+
+    <div v-if="user.role.name === 'proo-expert' && !isLoading">
+        <button id="saveGrades" @click="save" class="hidden"></button>
+        <table class="bg-white shadow rounded-lg">
+            <thead class="text-gray-500">
+                <tr>
+                    <th rowspan="2"
+                        class="text-sm font-medium py-2 px-4 border"
+                    >
+                        Команда
+                    </th>
+
+                    <th colspan="3"
+                        class="text-sm font-medium py-2 px-4 border"
+                    >
+                        Работы
+                    </th>
+
+                    <th colspan="5"
+                        class="text-sm font-medium py-2 px-4 border"
+                    >
+                        Баллы
+                    </th>
+                </tr>
+
+                <tr>
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        День 1
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        День 2
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        День 3
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        Перспективность предложенного курса
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        Качество реализации курса (чем более завершенным, технологичным, логичным и эстетически привлекательным выглядит курс, тем выше оценка)
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        Работа на Хакатоне (объем работы, выполненный командой за время проведения Хакатона, тем выше оценка)
+                    </th>
+
+                    <th class="text-sm font-medium py-2 px-4 border">
+                        Презентация курса (чем лучше команда презентует курс, тем выше оценка)
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="team, teamIndex in teams" :key="teamIndex">
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        {{ team.name }}
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <a :href="team.homework1.url" v-if="team.homework1" download
+                            class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
+                        >
+                            {{ team.homework1.name }}
+                        </a>
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <a :href="team.homework2.url" v-if="team.homework2" download
+                            class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
+                        >
+                            {{ team.homework1.name }}
+                        </a>
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <a :href="team.homework3.url" v-if="team.homework3" download
+                            class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
+                        >
+                            {{ team.homework1.name }}
+                        </a>
+
+                        <a :href="team.homework4.url" v-if="team.homework4" download
+                            class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs mt-3"
+                        >
+                            {{ team.homework4.name }}
+                        </a>
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <Input type="number" v-model="team.grade1" />
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <Input type="number" v-model="team.grade2" />
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <Input type="number" v-model="team.grade3" />
+                    </td>
+
+                    <td class="py-2 px-4 font-semibold text-sm border">
+                        <Input type="number" v-model="team.grade4" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="flex flex-col gap-y-5" v-if="user.role.name === 'teams'">

@@ -127,7 +127,11 @@ export default {
                     const json = await res.json()
                     if (res.ok) {
                         const obj = {
-                            value: +(team.grade),
+                            value: +(team.grade1) + (+team.grade2) + (+team.grade3) + (+team.grade4),
+                            grade1: team.grade1,
+                            grade2: team.grade2,
+                            grade3: team.grade3,
+                            grade4: team.grade4,
                             expert: ctx.rootState.user.id,
                             team: team.id
                         }
@@ -182,6 +186,7 @@ export default {
             try {
                 let query = {
                     role: 7,
+                    project: 6
                 }
 
                 query = qs.stringify(query)

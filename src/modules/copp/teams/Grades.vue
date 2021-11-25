@@ -25,7 +25,11 @@ const experts = computed(() => {
 const getExpertName = (expertName) => {
     let fio = expertName.split(' ')
 
-    return `${fio[0]} ${fio[1][0]}. ${fio[2][0]}.`
+    let string = `${fio[0]} ${fio[1][0]}.`
+
+    string += fio[2] ? ` ${fio[2][0]}.` : ''
+
+    return string
 }
 
 const teams = ref([])
@@ -182,27 +186,14 @@ const setAdditional = (team) => {
                 text-center
                 text-lg
             "
-        >Итоговый протокол экспертной комиссии по оцениванию проектных работ участников II регионального этапа проекта «PROопережение»</div>
+        >Итоговый протокол экспертной комиссии по оцениванию проектных работ участников дальневосточного этапа проекта «PROопережение»</div>
 
-        <table class="text-xs mt-5">
+        <table class="text-xs mt-5 w-full">
             <thead>
                 <tr>
-                    <th class="border p-2">
-                        <div>№</div>
-                    </th>
                     <th class="border">
                         <div>
                             Название команды
-                        </div>
-                    </th>
-                    <th class="border p-2">
-                        <div>
-                            Наименование организации
-                        </div>
-                    </th>
-                    <th class="border p-2">
-                        <div>
-                            Название курса
                         </div>
                     </th>
                     <th class="border p-2">
@@ -222,25 +213,7 @@ const setAdditional = (team) => {
                 <tr v-for="team, teamIndex in teams" :key="team.id">
                     <td class="border p-2">
                         <div>
-                            {{ team.identifier }}
-                        </div>
-                    </td>
-
-                    <td class="border p-2">
-                        <div>
                             {{ team.name }}
-                        </div>
-                    </td>
-
-                    <td class="border p-2">
-                        <div>
-                            {{ team.organization }}
-                        </div>
-                    </td>
-
-                    <td class="border p-2">
-                        <div>
-                            {{ team.courseName }}
                         </div>
                     </td>
 
@@ -272,7 +245,7 @@ const setAdditional = (team) => {
                 </div>
 
                 <div class="w-56 text-right">
-                    М.Ю.Присяжный
+                    М. Ю. Присяжный
                 </div>
             </div>
 
@@ -288,7 +261,7 @@ const setAdditional = (team) => {
                 </div>
 
                 <div class="w-56 text-right">
-                    В.Г.Хабаров
+                    И. И. Папуашвили
                 </div>
             </div>
 
@@ -304,7 +277,7 @@ const setAdditional = (team) => {
                 </div>
 
                 <div class="w-56 text-right">
-                    Г.А. Антонова-Тен
+                    И. Ю. Жилин
                 </div>
             </div>
 
@@ -320,39 +293,7 @@ const setAdditional = (team) => {
                 </div>
 
                 <div class="w-56 text-right">
-                    Л.М. Иванова
-                </div>
-            </div>
-
-            <div class="flex justify-between mt-8">
-                <div class="w-72">
-                    Член комиссии
-                </div>
-
-                <div>
-                    <div class="text-xs mt-6">
-                        (личная подпись)
-                    </div>
-                </div>
-
-                <div class="w-56 text-right">
-                    А.М. Соловьев
-                </div>
-            </div>
-
-            <div class="flex justify-between">
-                <div class="w-72">
-                    Член комиссии
-                </div>
-
-                <div>
-                    <div class="text-xs mt-6">
-                        (личная подпись)
-                    </div>
-                </div>
-
-                <div class="w-56 text-right">
-                    Н.В. Федотова
+                    А. Алланазаров
                 </div>
             </div>
 
@@ -368,7 +309,7 @@ const setAdditional = (team) => {
                 </div>
 
                 <div class="w-56 text-right">
-                    С.В. Гермогенова
+                    И. П. Дохунаева
                 </div>
             </div>
         </div>
@@ -381,15 +322,9 @@ const setAdditional = (team) => {
             print:hidden
         "
     >
-        <table>
+        <table class="w-full">
             <thead>
                 <tr>
-                    <th rowspan="2" class="
-                            p-4
-                            border
-                            text-sm
-                        "
-                    >№</th>
                     <th rowspan="2" class="
                             p-4
                             border
@@ -447,17 +382,6 @@ const setAdditional = (team) => {
 
             <tbody>
                 <tr v-for="team in teams" :key="team.id">
-                    <td class="px-4 py-2 border">
-                        <div class="
-                                text-sm
-                                text-gray-400
-                                font-medium
-                            "
-                        >
-                            {{ team.identifier }}
-                        </div>
-                    </td>
-
                     <td class="px-4 py-3 border">
                         <div class="
                                 text-sm
@@ -468,12 +392,12 @@ const setAdditional = (team) => {
                                 {{ team.name }}
                             </div>
 
-                            <div class="
+                            <!-- <div class="
                                 font-normal
                                 text-gray-400
                             ">
                                 {{ team.organization }}
-                            </div>
+                            </div> -->
                         </div>
                     </td>
 
