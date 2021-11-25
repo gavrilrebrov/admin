@@ -34,6 +34,7 @@ const teams = computed(() => {
             grade2: grade ? grade.grade2 : 0,
             grade3: grade ? grade.grade3 : 0,
             grade4: grade ? grade.grade4 : 0,
+            courseName: item.courseName
         })
     }
 
@@ -133,7 +134,13 @@ const save = () => {
                         <a :href="team.homework2.url" v-if="team.homework2" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
                         >
-                            {{ team.homework1.name }}
+                            {{ team.homework2.name }}
+                        </a>
+
+                        <a :href="team.courseName" v-if="team.courseName" target="_blank"
+                            class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs mt-3"
+                        >
+                            Видеоролик
                         </a>
                     </td>
 
@@ -141,7 +148,7 @@ const save = () => {
                         <a :href="team.homework3.url" v-if="team.homework3" download
                             class="bg-blue-100 text-blue-500 py-1 px-2 flex rounded text-xs"
                         >
-                            {{ team.homework1.name }}
+                            {{ team.homework3.name }}
                         </a>
 
                         <a :href="team.homework4.url" v-if="team.homework4" download
