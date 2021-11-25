@@ -29,6 +29,7 @@ const teams = computed(() => {
             homework1: item.homework1,
             homework2: item.homework2,
             homework3: item.homework3,
+            homework4: item.homework4,
             video: item.courseName,
             grade1: grade ? grade.grade1 : 0,
             grade2: grade ? grade.grade2 : 0,
