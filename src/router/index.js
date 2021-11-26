@@ -5,6 +5,9 @@ import es from './modules/es'
 import teams from './modules/teams'
 import events from './modules/events'
 
+import posts from './posts'
+import applications from './applications'
+
 import Home from '@/modules/Home.vue'
 
 export default createRouter({
@@ -20,5 +23,8 @@ export default createRouter({
         es,
         teams,
         events,
+
+        posts,
+        applications,
     ]
 })

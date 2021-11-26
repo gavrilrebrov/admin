@@ -79,7 +79,7 @@ const logout = () => store.dispatch('logout')
                 </div>
             </router-link>
 
-            <!-- <router-link to="/news"
+            <router-link to="/posts"
                 class="
                     flex items-center
                     p-2
@@ -97,7 +97,27 @@ const logout = () => store.dispatch('logout')
                 <div class="font-medium text-gray-300 text-sm">
                     Новости
                 </div>
-            </router-link> -->
+            </router-link>
+
+            <router-link to="/applications"
+                class="
+                    flex items-center
+                    p-2
+                    gap-x-4
+                    hover:bg-gray-900
+                    cursor-pointer
+                    rounded-md
+                    duration-200
+                "
+            >
+                <Icon icon="clipboard-check"
+                    class="w-6 text-gray-500"
+                />
+
+                <div class="font-medium text-gray-300 text-sm">
+                    Заявки
+                </div>
+            </router-link>
         </div>
 
         <div class="p-5 bg-gray-800 text-sm font-semibold text-gray-500">

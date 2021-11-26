@@ -1,4 +1,7 @@
 import VueCookies from 'vue-cookies'
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:1337'
 
@@ -15,7 +18,10 @@ export default {
 
                 return await res.json()
             } catch (err) {
-                console.error('err: ', err)
+                store.commit('notice', {
+                    type: 'error',
+                    text: err.message
+                })
             }
         } else {
             return false
@@ -34,7 +40,10 @@ export default {
 
             return await res.json()
         } catch (err) {
-            console.error('err: ', err)
+            store.commit('notice', {
+                type: 'error',
+                text: err.message
+            })
         }
     },
 
@@ -60,7 +69,10 @@ export default {
                 a.click()
                 document.body.removeChild(a)
             } catch (err) {
-                console.error('err: ', err)
+                store.commit('notice', {
+                    type: 'error',
+                    text: err.message
+                })
             }
         } else {
             return false
@@ -84,7 +96,10 @@ export default {
 
             return await res.json()
         } catch (err) {
-            console.error('err: ', err)
+            store.commit('notice', {
+                type: 'error',
+                text: err.message
+            })
         }
     },
 
@@ -99,7 +114,10 @@ export default {
 
             return await res.json()
         } catch (err) {
-            console.error('err: ', err)
+            store.commit('notice', {
+                type: 'error',
+                text: err.message
+            })
         }
     },
 
@@ -118,7 +136,10 @@ export default {
 
             return await res.json()
         } catch (err) {
-            console.error('err: ', err)
+            store.commit('notice', {
+                type: 'error',
+                text: err.message
+            })
         }
     }
 }
