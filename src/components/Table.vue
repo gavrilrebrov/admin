@@ -4,6 +4,8 @@ import Icon from './Icon.vue'
 import { defineEmits, defineProps, watch } from 'vue'
 import Input from './form/Input.vue'
 
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:1337'
+
 const props = defineProps(['columns', 'data', 'edit', 'show'])
 
 const emit = defineEmits(['onDownload'])
@@ -114,6 +116,13 @@ const onDownload = (e, id) => {
 
                         <div v-if="col.type === 'datetime'">
                             {{ formatDateTime(item[col.key]) }}
+                        </div>
+
+                        <div v-if="col.type === 'avatar'"
+                            class="w-16 h-16 rounded-full bg-cover bg-center"
+                            :style="{backgroundImage:`url(${apiUrl}${item[col.key]['url']})`}"
+                        >
+
                         </div>
 
                         <div v-if="col.type === 'contacts'"

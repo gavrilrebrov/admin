@@ -6,6 +6,7 @@ import Select from './Select.vue'
 import Datepicker from './Datepicker.vue'
 import ImageUploader from './ImageUploader.vue'
 import Toggle from './Toggle.vue'
+import TextArea from './TextArea.vue'
 
 const props = defineProps(['modelValue', 'label', 'type', 'items', 'size'])
 
@@ -28,7 +29,7 @@ watch(() => props.modelValue, value => {
         {{ props.label }}
     </div>
 
-    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime' && type !== 'toggle' && type !== 'image'" :type="props.type" v-model="modelValue" />
+    <Input :size="size" v-if="type !== 'editor' && type !== 'select' && type !== 'daterange' && type !== 'date' && type !== 'datetime' && type !== 'toggle' && type !== 'image' && type !== 'text'" :type="props.type" v-model="modelValue" />
 
     <Editor :size="size" v-if="type === 'editor'" v-model="modelValue" />
 
@@ -39,5 +40,7 @@ watch(() => props.modelValue, value => {
     <Toggle v-if="type === 'toggle'" v-model="modelValue" />
 
     <ImageUploader :size="size" v-if="type === 'image'" v-model="modelValue" />
+
+    <TextArea v-if="type === 'text'" v-model="modelValue" />
 </div>
 </template>

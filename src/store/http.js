@@ -131,7 +131,10 @@ export default {
         try {
             const res = await fetch(`${apiUrl}/upload`, {
                 method: 'post',
-                body: formData
+                body: formData,
+                headers: {
+                    Authorization: 'Bearer ' + VueCookies.get('token')
+                }
             })
 
             return await res.json()

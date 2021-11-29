@@ -26,7 +26,7 @@ const goToCreate = () => {
             Страницы
         </div>
 
-        <div class="inline-flex pag-x-4 px-5">
+        <div class="inline-flex gap-x-4 px-5">
             <button
                 v-if="route.name === 'pages'"
                 @click="goToCreate"

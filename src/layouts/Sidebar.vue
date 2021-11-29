@@ -118,6 +118,26 @@ const logout = () => store.dispatch('logout')
                     Заявки
                 </div>
             </router-link>
+
+            <router-link to="/people"
+                class="
+                    flex items-center
+                    p-2
+                    gap-x-4
+                    hover:bg-gray-900
+                    cursor-pointer
+                    rounded-md
+                    duration-200
+                "
+            >
+                <Icon icon="users"
+                    class="w-6 text-gray-500"
+                />
+
+                <div class="font-medium text-gray-300 text-sm">
+                    Команда
+                </div>
+            </router-link>
         </div>
 
         <div class="p-5 bg-gray-800 text-sm font-semibold text-gray-500">
@@ -125,7 +145,7 @@ const logout = () => store.dispatch('logout')
         </div>
     </div>
 
-    <div class="w-full h-full bg-gray-100">
+    <div class="w-full max-h-full bg-gray-100 overflow-y-auto">
         <router-view />
     </div>
 </div>

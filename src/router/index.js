@@ -7,6 +7,7 @@ import events from './modules/events'
 
 import posts from './posts'
 import applications from './applications'
+import people from './people'
 
 import Home from '@/modules/Home.vue'
 
@@ -26,5 +27,6 @@ export default createRouter({
 
         posts,
         applications,
+        people,
     ]
 })

@@ -7,6 +7,7 @@ import teams from './modules/teams'
 import events from './modules/events'
 
 import applications from './applications'
+import people from './people'
 
 import http from '@/store/http'
 
@@ -17,7 +18,8 @@ export default createStore({
         teams,
         events,
 
-        applications
+        applications,
+        people
     },
 
     state () {
