@@ -1,0 +1,12 @@
+{
+  "name": "@grebrov/admin",
+  "version": "1.0.0",
+  "description": "Admin Template",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/grebrov/admin.git"
+  },
+  "author": "Gavril Rebrov <i@grebrov.ru>",
+  "license": "ISC"
+}
